@@ -1,6 +1,6 @@
 ---
-title: 解决Hexo github pages CName 自动消失BUG
-date: 2023-06-28 01:28:22
+title: 解决Hexo github pages CName 自动消失BUG UPDATE
+date: 2023-09-28 01:28:22
 tags: [hexo]
 ---
 ## 前言
