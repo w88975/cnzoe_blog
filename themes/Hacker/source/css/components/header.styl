@@ -6,7 +6,7 @@ header
   line-height 1.8rem
 
   .site-branding
-    text-align center
+    text-align left
     margin-bottom 2rem
     font-family "Open Sans", arial, sans-serif
     letter-spacing 0.1em
@@ -36,7 +36,7 @@ header
       margin 1rem 0 0
 
   .site-navigation
-    text-align center
+    text-align left
 
     ul
       list-style none
@@ -47,6 +47,8 @@ header
       li
         display inline-block
         margin 0 0.5rem
+        &:first-child 
+          margin-left: 0
 
         a
           display block
@@ -54,3 +56,5 @@ header
           font-size 1.6rem
           line-height 2rem
           padding 0 1rem
+          &:first-child 
+            padding-left: 0
