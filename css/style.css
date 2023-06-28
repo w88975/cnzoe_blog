@@ -471,7 +471,7 @@ header {
   line-height: 1.8rem;
 }
 header .site-branding {
-  text-align: center;
+  text-align: left;
   margin-bottom: 2rem;
   font-family: "Open Sans", arial, sans-serif;
   letter-spacing: 0.1em;
@@ -501,7 +501,7 @@ header .site-branding .site-description {
   margin: 1rem 0 0;
 }
 header .site-navigation {
-  text-align: center;
+  text-align: left;
 }
 header .site-navigation ul {
   list-style: none;
@@ -513,12 +513,18 @@ header .site-navigation ul li {
   display: inline-block;
   margin: 0 0.5rem;
 }
+header .site-navigation ul li:first-child {
+  margin-left: 0;
+}
 header .site-navigation ul li a {
   display: block;
   color: #f03838;
   font-size: 1.6rem;
   line-height: 2rem;
   padding: 0 1rem;
+}
+header .site-navigation ul li a:first-child {
+  padding-left: 0;
 }
 article {
   position: relative;
