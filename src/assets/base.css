@@ -38,14 +38,14 @@
 
 body {
     /* min-height: 100vh; */
-    background: #fff;
-    background-size: 14px 14px;
+    background: #f6f6f6;
+    /* background-size: 14px 14px;
     background-image: linear-gradient(to right, rgb(218, 218, 218, 1) 0.5px, transparent 0.5px),
         linear-gradient(rgb(218, 218, 218, 1) 0.5px, transparent 0.5px);
-    background-position: 0 0;
+    background-position: 0 0; */
     /* 写一个动画, background-position 从0-10px循环 */
-    animation: move 3s linear infinite;
-    height: 100%;
+    /* animation: move 3s linear infinite;
+    height: 100%; */
     margin: 0;
     padding: 0;
 }
