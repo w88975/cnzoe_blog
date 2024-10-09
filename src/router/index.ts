@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LayoutView from '@/components/LayoutView.vue'
 import HomeView from '../views/HomeView.vue'
+import NotFoundView from '../views/NotFound.vue'
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -11,7 +12,7 @@ const router = createRouter({
             component: LayoutView,
             children: [
                 {
-                    path: '',
+                    path: '/',
                     name: 'home',
                     component: HomeView
                 },
@@ -22,6 +23,11 @@ const router = createRouter({
                 }
             ]
         },
+        {
+            path: '/:pathMatch(.*)*',
+            name: 'not-found',
+            component: NotFoundView,
+        }
     ]
 })
 
