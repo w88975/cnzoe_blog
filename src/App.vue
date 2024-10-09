@@ -4,9 +4,9 @@ import DrawerWrapper from './components/drawer/DrawerWrapper.vue'
 </script>
 
 <template>
-	<DrawerWrapper>
-		<RouterView />
-	</DrawerWrapper>
+	<!-- <DrawerWrapper> -->
+	<RouterView />
+	<!-- </DrawerWrapper> -->
 </template>
 
 <style scoped></style>
