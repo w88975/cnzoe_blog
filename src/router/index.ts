@@ -20,6 +20,11 @@ const router = createRouter({
                     path: 'about',
                     name: 'about',
                     component: () => import('../views/AboutView.vue')
+                },
+                {
+                    path: 'md-editor',
+                    name: 'md-editor',
+                    component: () => import('../views/MDEditor.vue')
                 }
             ]
         },

@@ -13,7 +13,9 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@kangc/v-md-editor": "^2.3.18",
     "mitt": "^3.0.1",
+    "prismjs": "^1.29.0",
     "vue": "^3.4.29",
     "vue-router": "^4.3.3"
   },

@@ -54,8 +54,8 @@ const menuList = ref([
         path: '/'
     },
     {
-        name: 'Passwords',
-        path: '/passwords'
+        name: 'Markdown',
+        path: '/md-editor'
     },
     {
         name: 'About',
