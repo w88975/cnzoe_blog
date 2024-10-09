@@ -1,7 +1,10 @@
 <template>
     <transition name="fade">
         <div v-if="isOpen" class="w-full h-full fixed top-0 left-0 z-50">
-            <div class="w-full h-full absolute top-0 left-0 bg-black bg-opacity-50" @click="toggleDrawer"></div>
+            <div
+                class="w-full h-full absolute top-0 left-0 bg-black bg-opacity-50"
+                @click="toggleDrawer"
+            ></div>
             <div class="w-full panel p-10 bottom-0 bg-white absolute rounded-t-lg">
                 <slot></slot>
             </div>

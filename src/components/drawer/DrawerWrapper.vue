@@ -1,6 +1,8 @@
 <template>
     <div :class="['drawer-wrapper', isOpen ? 'drawer-wrapper-bg-black' : '']">
-        <div :class="isOpen ? 'drawer-wrapper-animate drawer-wrapper-on' : 'drawer-wrapper-animate'">
+        <div
+            :class="isOpen ? 'drawer-wrapper-animate drawer-wrapper-on' : 'drawer-wrapper-animate'"
+        >
             <slot></slot>
         </div>
     </div>

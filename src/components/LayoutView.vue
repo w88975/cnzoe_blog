@@ -42,12 +42,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { RouterView } from 'vue-router'
-import IconLogo from '@/components/icons/IconLogo.vue'
-import IconMenu from '@/components/icons/IconMenu.vue'
+import IconLogo from '@/components/icons/iconLogo.vue'
+import IconMenu from '@/components/icons/iconMenu.vue'
 import DrawerPanel from '@/components/drawer/DrawerPanel.vue'
 import FooterView from '@/components/FooterView.vue'
 
-const drawerPanel = ref(null)
+const drawerPanel = ref<InstanceType<typeof DrawerPanel> | null>(null)
 const menuList = ref([
     {
         name: 'Home',
@@ -63,7 +63,7 @@ const menuList = ref([
     }
 ])
 const toggleDrawer = () => {
-    drawerPanel.value.toggleDrawer()
+    drawerPanel.value && drawerPanel.value.toggleDrawer()
 }
 </script>
 
