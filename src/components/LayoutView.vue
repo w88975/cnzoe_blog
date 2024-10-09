@@ -1,5 +1,5 @@
 <template>
-    <div class="md:max-w-5xl mx-auto bg-white flex-1">
+    <div class="md:max-w-5xl mx-auto bg-white flex-1 flex-col flex">
         <!-- header -->
         <div class="flex justify-between items-center p-4">
             <div class="flex items-center">
@@ -28,6 +28,7 @@
         <div class="flex-1 p-4">
             <RouterView />
         </div>
+        <FooterView />
 
         <!-- drawer menu panel -->
         <DrawerPanel ref="drawerPanel">
@@ -49,7 +50,7 @@ import { RouterView } from 'vue-router'
 import IconLogo from '@/components/icons/IconLogo.vue'
 import IconMenu from '@/components/icons/IconMenu.vue'
 import DrawerPanel from '@/components/drawer/DrawerPanel.vue'
-
+import FooterView from '@/components/FooterView.vue'
 const drawerPanel = ref(null)
 
 const toggleDrawer = () => {

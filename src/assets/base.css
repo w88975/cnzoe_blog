@@ -45,12 +45,14 @@ body {
     background-position: 0 0;
     /* 写一个动画, background-position 从0-10px循环 */
     animation: move 3s linear infinite;
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 #app {
-    min-width: 100%;
-    min-height: 100%;
-    position: fixed;
+    min-height: 100vh;
+    flex: 1;
     display: flex;
     flex-direction: column;
 }

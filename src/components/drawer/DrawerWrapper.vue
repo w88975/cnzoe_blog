@@ -1,5 +1,5 @@
 <template>
-    <div :class="['drawer-wrapper overflow-hidden', isOpen ? 'drawer-wrapper-bg-black' : '']">
+    <div :class="['drawer-wrapper', isOpen ? 'drawer-wrapper-bg-black' : '']">
         <div :class="isOpen ? 'drawer-wrapper-animate drawer-wrapper-on' : 'drawer-wrapper-animate'">
             <slot></slot>
         </div>
@@ -40,6 +40,11 @@ defineExpose({
 
 .drawer-wrapper-bg-black {
     background-color: #000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 
 
@@ -56,7 +61,12 @@ defineExpose({
 
 .drawer-wrapper-on {
     border-radius: 8px;
-    overflow: hidden;
+    /* overflow: hidden; */
     transform: scale(0.9828042328042328) translate3d(0, 14px, 0);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 </style>
