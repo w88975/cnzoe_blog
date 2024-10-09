@@ -57,7 +57,7 @@ defineExpose({
 .drawer-wrapper-animate {
     flex: 1;
     display: flex;
-    background-color: #fff;
+
     transition-property: transform, border-radius;
     transition-duration: 0.5s;
     transition-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
@@ -68,6 +68,7 @@ defineExpose({
 }
 
 .drawer-wrapper-on {
+    background-color: #f6f6f6;
     border-radius: 8px;
     transform: scale(0.9828042328042328) translate3d(0, 14px, 0);
     position: fixed;
