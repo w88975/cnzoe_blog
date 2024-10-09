@@ -1,7 +1,6 @@
 import './assets/base.css'
 import mitt from 'mitt'
 
-
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'

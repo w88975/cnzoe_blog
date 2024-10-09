@@ -23,8 +23,8 @@
         </div>
         <!-- router view -->
         <div class="flex-1 p-4">
-            <RouterView />
             <slot />
+            <RouterView />
         </div>
         <FooterView />
 
@@ -51,16 +51,16 @@ const drawerPanel = ref(null)
 const menuList = ref([
     {
         name: 'Home',
-        path: '/',
+        path: '/'
     },
     {
         name: 'Passwords',
-        path: '/passwords',
+        path: '/passwords'
     },
     {
         name: 'About',
-        path: '/about',
-    },
+        path: '/about'
+    }
 ])
 const toggleDrawer = () => {
     drawerPanel.value.toggleDrawer()

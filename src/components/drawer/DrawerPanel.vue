@@ -13,7 +13,7 @@
 import { ref, getCurrentInstance } from 'vue'
 
 const instance = getCurrentInstance()
-const bus = instance.appContext.config.globalProperties.$bus
+const bus = instance?.appContext.config.globalProperties.$bus
 
 const isOpen = ref(false)
 
@@ -24,7 +24,7 @@ const toggleDrawer = () => {
 }
 // 暴露toggleDrawer
 defineExpose({
-    toggleDrawer,
+    toggleDrawer
 })
 </script>
 

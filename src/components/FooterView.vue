@@ -1,11 +1,9 @@
 <template>
-    <div class="footer p-4">
-        Footer
-    </div>
+    <div class="footer p-4">Footer</div>
 </template>
 
 <script setup lang="ts">
-import IconLogo from '@/components/icons/IconLogo.vue'
+// import IconLogo from '@/components/icons/IconLogo.vue'
 </script>
 
 <style scoped>

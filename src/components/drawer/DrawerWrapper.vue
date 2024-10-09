@@ -4,18 +4,17 @@
             <slot></slot>
         </div>
     </div>
-
 </template>
 
 <script setup lang="ts">
 import { ref, getCurrentInstance } from 'vue'
 
 const instance = getCurrentInstance()
-const bus = instance.appContext.config.globalProperties.$bus
+const bus = instance?.appContext.config.globalProperties.$bus
 
 const isOpen = ref(false)
 
-bus.on('toggleDrawer', (state) => {
+bus.on('toggleDrawer', (state: boolean) => {
     isOpen.value = state
     if (state) {
         document.body.style.overflow = 'hidden'
@@ -29,7 +28,7 @@ const toggleDrawer = () => {
 }
 
 defineExpose({
-    toggleDrawer,
+    toggleDrawer
 })
 </script>
 
@@ -52,7 +51,6 @@ defineExpose({
     height: 100%;
     overflow: hidden;
 }
-
 
 .drawer-wrapper-animate {
     flex: 1;
