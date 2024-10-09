@@ -1,5 +1,6 @@
 <template>
     <div>
+        <p v-for="blog in blogList" :key="blog.id">{{ blog.title }}</p>
         <h1 class="text-2xl font-bold mb-4">Markdown Editor</h1>
         <v-md-editor v-model="text" height="800px" @save="save"></v-md-editor>
         <div class="lg:hidden">
@@ -9,11 +10,19 @@
     </div>
 </template>
 
-<script setup lang="ts">
-import { ref } from 'vue'
-import { createBlog } from '@/api/blog'
+<script setup lang="js">
+import { ref, onMounted } from 'vue'
+import { createBlog, getBlogList } from '@/api/blog'
 const text = ref('')
-const save = (text: string, html: string) => {
+const blogList = ref([])
+
+onMounted(() => {
+    getBlogList().then(res => {
+        blogList.value = res.data.data.list
+    })
+})
+
+const save = (text, html) => {
     console.log(html)
     createBlog({
         title: 'test',
