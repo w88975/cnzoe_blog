@@ -11,8 +11,17 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { createBlog } from '@/api/blog'
 const text = ref('')
 const save = (text: string, html: string) => {
     console.log(html)
+    createBlog({
+        title: 'test',
+        value: html,
+        tags: 'test,test2',
+        category_id: 1,
+        thumbnail: '',
+        extra: '',
+    })
 }
 </script>
