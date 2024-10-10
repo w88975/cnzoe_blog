@@ -9,3 +9,8 @@ export const createBlog = (data) => {
 export const getBlogList = () => {
     return instance.get(`/api/blogs/list`)
 }
+
+// delete blog
+export const deleteBlog = (id) => {
+    return instance.post(`/api/blogs/delete/${id}`, { id })
+}

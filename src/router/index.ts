@@ -21,10 +21,25 @@ const router = createRouter({
                     name: 'about',
                     component: () => import('../views/AboutView.vue')
                 },
+            ]
+        },
+        {
+            path: '/admin',
+            name: 'admin',
+            component: LayoutView,
+
+            children: [
+                {
+                    path: 'post-list',
+                    name: 'post-list',
+                    // @ts-ignore
+                    component: () => import('../views/admin/PostList.vue')
+                },
                 {
                     path: 'md-editor',
                     name: 'md-editor',
-                    component: () => import('../views/MDEditor.vue')
+                    // @ts-ignore
+                    component: () => import('../views/admin/MDEditor.vue')
                 }
             ]
         },

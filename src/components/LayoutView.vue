@@ -2,10 +2,13 @@
     <div class="md:max-w-5xl mx-auto flex-1 flex-col flex">
         <!-- header -->
         <div class="flex justify-between items-center p-4">
-            <div class="flex items-center">
-                <IconLogo class="w-8 h-8" />
-                <span class="text-2xl font-bold ml-2">My APP Name</span>
-            </div>
+            <RouterLink to="/">
+                <div class="flex items-center cursor-pointer active:opacity-50">
+                    <IconLogo class="w-8 h-8" />
+                    <span class="text-2xl font-bold ml-2">My APP Name</span>
+                </div>
+            </RouterLink>
+
             <!-- 右侧导航, 移动设备兼容 -->
             <div class="md:hidden">
                 <button class="p-2" @click="toggleDrawer">
@@ -15,7 +18,7 @@
             <!-- 右侧导航, PC显示菜单 -->
             <div class="hidden md:block">
                 <ul class="flex items-center">
-                    <li class="p-2" v-for="item in menuList" :key="item.name">
+                    <li class="p-2 active:opacity-50" v-for="item in menuList" :key="item.name">
                         <RouterLink :to="item.path">{{ item.name }}</RouterLink>
                     </li>
                 </ul>
@@ -54,8 +57,12 @@ const menuList = ref([
         path: '/'
     },
     {
+        name: 'BlogList',
+        path: '/admin/post-list'
+    },
+    {
         name: 'Markdown',
-        path: '/md-editor'
+        path: '/admin/md-editor'
     },
     {
         name: 'About',
