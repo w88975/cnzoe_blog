@@ -30,10 +30,22 @@ const router = createRouter({
 
             children: [
                 {
+                    path: '',
+                    name: 'dashboard',
+                    // @ts-ignore
+                    component: () => import('../views/admin/DashBoard.vue')
+                },
+                {
                     path: 'post-list',
                     name: 'post-list',
                     // @ts-ignore
                     component: () => import('../views/admin/PostList.vue')
+                },
+                {
+                    path: 'image-list',
+                    name: 'image-list',
+                    // @ts-ignore
+                    component: () => import('../views/admin/ImageList.vue')
                 },
                 {
                     path: 'md-editor',

@@ -57,12 +57,8 @@ const menuList = ref([
         path: '/'
     },
     {
-        name: 'BlogList',
-        path: '/admin/post-list'
-    },
-    {
-        name: 'Markdown',
-        path: '/admin/md-editor'
+        name: 'Admin',
+        path: '/admin'
     },
     {
         name: 'About',
