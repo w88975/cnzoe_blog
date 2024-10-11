@@ -45,7 +45,7 @@ const handleDeleteFile = async (done) => {
   deleteLoading.value = true
   try {
     const res = await deleteFile({
-      fileId: props.file.id
+      fileIds: props.file.id + ''
     })
     if (res.data.success) {
       Message.success('删除成功')

@@ -1,12 +1,13 @@
 <template>
   <TitleLine title="File List">
     <template #right>
-      <!-- 显示创建按钮 -->
       <a-space>
         <a-button type="primary" @click="showCreateFolderModal">新建文件夹</a-button>
-        <!-- <a-button type="primary">新建文件夹</a-button> -->
+        <!-- Add batch delete button -->
+        <a-button type="primary" danger :disabled="selectedFiles.length === 0" @click="confirmBatchDelete">
+          批量删除 ({{ selectedFiles.length }})
+        </a-button>
       </a-space>
-
     </template>
   </TitleLine>
 
@@ -25,10 +26,19 @@
       <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 auto-rows-auto relative"
         @dragenter.prevent="handleDragEnter" @dragover.prevent @dragleave.prevent="handleDragLeave"
         @drop.prevent="handleFileDrop">
-        <div @click="folderClick(file.type, file.full_path, file)" v-for="file in fileList" :key="file.id"
-          class="flex flex-col items-center p-2 border rounded cursor-pointer active:opacity-50">
-          <IconFile size="24" :type="file.type" :fileName="file.path" />
-          <span class="text-sm text-center truncate w-full block">{{ file.path }}</span>
+        <div v-for="file in fileList" :key="file.id"
+          class="flex flex-col items-center p-2 border rounded cursor-pointer active:opacity-50 relative">
+          <!-- Add checkbox for file selection -->
+          <div class="absolute top-2 right-2 z-10">
+            <a-checkbox :model-value="selectedFiles.includes(file.id)"
+              @update:model-value="toggleFileSelection(file.id)" />
+          </div>
+
+          <div @click="folderClick(file.type, file.full_path, file)"
+            class="w-full h-full flex flex-col items-center justify-center">
+            <IconFile size="24" :type="file.type" :fileName="file.path" />
+            <span class="text-sm text-center truncate w-full block">{{ file.path }}</span>
+          </div>
         </div>
         <!-- 上传按钮 -->
         <div class="flex flex-col items-center p-2 border rounded cursor-pointer active:opacity-50"
@@ -62,7 +72,7 @@
           {{ file.status }}
           <span class="text-xs text-gray-500">{{ file.speed }}</span>
         </span>
-        
+
       </div>
       <div class="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
         <div class="bg-blue-500 h-full transition-all duration-300 ease-in-out" :style="{ width: `${file.progress}%` }">
@@ -88,14 +98,20 @@
   <DrawerPanel v-model:visible="fileInfoVisible">
     <FileInfo :file="currentFile" @file-deleted="handleFileDeleted" />
   </DrawerPanel>
+
+  <!-- Add confirmation modal for batch delete -->
+  <a-modal v-model:visible="batchDeleteModalVisible" title="确认批量删除" @ok="performBatchDelete"
+    @cancel="batchDeleteModalVisible = false">
+    <p>确定要删除选中的 {{ selectedFiles.length }} 个文件/文件夹吗？此操作不可撤销。</p>
+  </a-modal>
 </template>
 
 <script setup lang="js">
 import { computed, onMounted, reactive, ref, toRefs, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { Message } from '@arco-design/web-vue'
+import { Message, Modal } from '@arco-design/web-vue'
 import { IconPlus } from '@arco-design/web-vue/es/icon'
-import { getFileList, createFolder, uploadFile, saveUploadData } from '@/api/files'
+import { getFileList, createFolder, uploadFile, saveUploadData, deleteFile } from '@/api/files'
 import { uploadFileToR2 } from '@/utils/aws-r2'
 import { formatFileSize } from '@/utils/format'
 import BoxView from '@/components/BoxView.vue'
@@ -238,7 +254,7 @@ const addToUploadQueue = (file) => {
 const updateFileProgress = (file, progress, speed) => {
   file.progress = Math.round(progress)
   // file.speed = formatFileSize(speed) + '/s'
-  file.speed = speed + 'MB/s';
+  file.speed = speed + 'MB/s'
   if (progress === 100) {
     file.status = 'Completed'
   } else {
@@ -325,6 +341,39 @@ const handleFileDeleted = async ({ success, fileId }) => {
   if (success) {
     fileInfoVisible.value = false // 关闭文件信息抽屉
     await getFileListData(currentDir.value) // 刷新当前目录的文件列表
+  }
+}
+
+const selectedFiles = ref([])
+const batchDeleteModalVisible = ref(false)
+
+const toggleFileSelection = (fileId) => {
+  const index = selectedFiles.value.indexOf(fileId)
+  if (index === -1) {
+    selectedFiles.value.push(fileId)
+  } else {
+    selectedFiles.value.splice(index, 1)
+  }
+}
+
+const confirmBatchDelete = () => {
+  batchDeleteModalVisible.value = true
+}
+
+const performBatchDelete = async () => {
+  try {
+    // Implement the API call to delete multiple files
+    // await deleteMultipleFiles(selectedFiles.value)
+    const ids = selectedFiles.value.join(',')
+    loading.value = true
+    await deleteFile({ fileIds: ids })
+    Message.success(`成功删除 ${selectedFiles.value.length} 个文件/文件夹`)
+    selectedFiles.value = []
+    await getFileListData(currentDir.value)
+  } catch (error) {
+    Message.error('批量删除失败：' + error.message)
+  } finally {
+    batchDeleteModalVisible.value = false
   }
 }
 
