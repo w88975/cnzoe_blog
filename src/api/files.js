@@ -13,3 +13,16 @@ export const getFileList = (params) => {
 export const createFolder = (data) => {
     return instance.post('/api/files/create-folder', { ...data })
 }
+
+// 上传文件
+export const uploadFile = (data) => {
+    const formData = new FormData();
+    formData.append('file', data.file);
+    formData.append('dir', data.dir);
+
+    return instance.post('/api/files/upload', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    });
+}
