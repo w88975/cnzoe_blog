@@ -25,7 +25,7 @@
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 auto-rows-auto relative"
                 @dragenter.prevent="handleDragEnter" @dragover.prevent @dragleave.prevent="handleDragLeave"
                 @drop.prevent="handleFileDrop">
-                <div @click="folderClick(file.type, file.full_path)" v-for="file in fileList" :key="file.id"
+                <div @click="folderClick(file.type, file.full_path, file)" v-for="file in fileList" :key="file.id"
                     class="flex flex-col items-center p-2 border rounded cursor-pointer active:opacity-50">
                     <IconFile size="24" :type="file.type" :fileName="file.path" />
                     <span class="text-sm text-center truncate w-full block">{{ file.path }}</span>
@@ -55,6 +55,12 @@
         <div class="text-sm text-gray-500 mb-4">当前目录：{{ currentDir }}</div>
         <a-input v-model="createFolderName" placeholder="请输入文件夹名称" />
     </a-modal>
+
+    <!-- 展示文件信息 -->
+    <DrawerPanel v-model:visible="fileInfoVisible">
+        <FileInfo :file="currentFile" />
+    </DrawerPanel>
+
 </template>
 
 <script setup lang="js">
@@ -65,7 +71,8 @@ import { getFileList, createFolder, uploadFile } from '@/api/files'
 import { ref, onMounted, watch, computed } from 'vue'
 import { Message } from '@arco-design/web-vue'
 import { useRouter, useRoute } from 'vue-router'
-import { OSS_URL } from '@/config'
+import DrawerPanel from '@/components/drawer/DrawerPanel.vue'
+import FileInfo from './FileInfo.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -74,13 +81,15 @@ const fileList = ref([])
 const loading = ref(false)
 const currentDir = ref('/')
 // 移除 lastDirs
-
+const fileInfoVisible = ref(false)
 const createFolderVisible = ref(false)
 const createFolderName = ref('')
 const isDragging = ref(false)
 const fileInput = ref(null)
 const uploadLoading = ref(false)
 const dragCounter = ref(0)
+
+const currentFile = ref(null)
 
 const pathSegments = computed(() => {
     const segments = currentDir.value.split('/').filter(Boolean)
@@ -110,12 +119,13 @@ watch(() => route.query.dir, (newDir) => {
 })
 
 
-const folderClick = async (type, path) => {
+const folderClick = async (type, path, file) => {
     if (type === 0) {
         await router.push({ query: { dir: encodeURIComponent(path) } })
         // getFileListData will be triggered by the watch function
     } else {
-        window.open(`${OSS_URL}${path}`, '_blank')
+        currentFile.value = file
+        fileInfoVisible.value = true
     }
 }
 

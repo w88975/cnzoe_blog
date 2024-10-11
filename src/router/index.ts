@@ -45,7 +45,7 @@ const router = createRouter({
                     path: 'file-list',
                     name: 'file-list',
                     // @ts-ignore
-                    component: () => import('../views/admin/ImageList.vue')
+                    component: () => import('../views/admin/Files/FileList.vue')
                 },
                 {
                     path: 'md-editor',

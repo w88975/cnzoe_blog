@@ -32,7 +32,7 @@
         <FooterView />
 
         <!-- drawer menu panel -->
-        <DrawerPanel ref="drawerPanel">
+        <DrawerPanel v-model:visible="drawerVisible">
             <ul class="flex flex-col items-center">
                 <li class="p-4" v-for="item in menuList" :key="item.name">
                     <RouterLink :to="item.path">{{ item.name }}</RouterLink>
@@ -50,7 +50,7 @@ import IconMenu from '@/components/icons/iconMenu.vue'
 import DrawerPanel from '@/components/drawer/DrawerPanel.vue'
 import FooterView from '@/components/FooterView.vue'
 
-const drawerPanel = ref<InstanceType<typeof DrawerPanel> | null>(null)
+const drawerVisible = ref(false)
 const menuList = ref([
     {
         name: 'Home',
@@ -66,7 +66,7 @@ const menuList = ref([
     }
 ])
 const toggleDrawer = () => {
-    drawerPanel.value && drawerPanel.value.toggleDrawer()
+    drawerVisible.value = !drawerVisible.value
 }
 </script>
 
