@@ -15,7 +15,10 @@ export const createFolder = (data) => {
 }
 
 // 上传文件
+// 废弃, 因为可以纯前端上传, 不受大小限制
 export const uploadFile = (data) => {
+  const fileKey = `${data.dir}/${data.file.name}`
+  const { url, fields } = getR2UploadCredentials({ fileKey })
     const formData = new FormData();
     formData.append('file', data.file);
     formData.append('dir', data.dir);
@@ -25,4 +28,14 @@ export const uploadFile = (data) => {
             'Content-Type': 'multipart/form-data'
         }
     });
+}
+
+// 上传完后保存上传数据
+export const saveUploadData = (data) => {
+    return instance.post('/api/files/save-after-upload', { ...data })
+}
+
+// 删除文件
+export const deleteFile = (data) => {
+    return instance.post('/api/files/delete', { ...data })
 }
