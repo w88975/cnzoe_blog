@@ -42,7 +42,7 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="js">
 import { ref } from 'vue'
 import { RouterView } from 'vue-router'
 import IconLogo from '@/components/icons/iconLogo.vue'
