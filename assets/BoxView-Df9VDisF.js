@@ -1,0 +1,1 @@
+import{_ as o,o as s,b as t,L as r}from"./index-B7F0lq-h.js";const c={},n={class:"bg-white rounded-md p-4 mb-5"};function a(e,_){return s(),t("div",n,[r(e.$slots,"default")])}const i=o(c,[["render",a]]);export{i as B};
