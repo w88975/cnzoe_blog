@@ -13,7 +13,7 @@
         <a-spin class="w-full" :loading="loading">
             <a-list>
                 <a-list-item v-for="(blog, idx) in blogList" :key="idx">
-                    <a-list-item-meta :title="blog.title" :description="blog.value"></a-list-item-meta>
+                    <a-list-item-meta :title="blog.title" :description="blog.extra"></a-list-item-meta>
                     <template #actions>
                         <icon-edit />
                         <icon-delete @click="handleDelete(blog.id)" />

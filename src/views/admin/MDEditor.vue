@@ -28,6 +28,10 @@ import { ref, onMounted } from 'vue'
 import { createBlog } from '@/api/blog'
 import { getTagList } from '@/api/tag'
 import { Message } from '@arco-design/web-vue';
+import { extractSummary } from '@/utils/markdown'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()  
 
 const mdEditor = ref(null)
 
@@ -64,15 +68,18 @@ const handleSave = () => {
 
 }
 
-const handleMDSave = (text, html) => {
+const handleMDSave = async (text, html) => {
     console.log(text, html)
-    createBlog({
+    await createBlog({
         title: title.value,
         value: html,
         tags: tag.value.join(','),
         category_id: 1,
         thumbnail: '',
-        extra: text,
+        extra: extractSummary(text),
     })
+    Message.success('Create success')
+    // 跳转到列表页
+    router.replace('/admin/post-list')
 }
 </script>

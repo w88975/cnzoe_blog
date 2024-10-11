@@ -1,0 +1,6 @@
+
+# 在你的 GitHub Pages 仓库的根目录下的 _config.yml 文件中
+try_files:
+  - index.html
+  - index.htm
+  - README.md
