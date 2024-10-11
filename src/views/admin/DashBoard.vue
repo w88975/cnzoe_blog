@@ -3,31 +3,31 @@
     <BoxView>
       <p class="text-xl font-bold mb-4">My Apps</p>
       <div class="grid grid-cols-2 gap-4">
-        <RouterLink to="/admin/post-list">
-          <div class="bg-gray-100 p-4 rounded-md cursor-pointer flex flex-row items-center">
-            <icon-file size="24" class="mr-2" />
-            Blog Manager
+        <RouterLink to="/admin/post-list" class="h-full">
+          <div class="bg-gray-100 p-4 rounded-md cursor-pointer flex flex-row items-center h-full">
+            <icon-file size="24" class="mr-2 flex-shrink-0" />
+            <span class="flex-grow">Blog Manager</span>
           </div>
         </RouterLink>
 
-        <RouterLink to="/admin/file-list">
-          <div class="bg-gray-100 p-4 rounded-md cursor-pointer flex flex-row items-center">
-            <icon-image size="24" class="mr-2" />
-            Image Manager
+        <RouterLink to="/admin/file-list" class="h-full">
+          <div class="bg-gray-100 p-4 rounded-md cursor-pointer flex flex-row items-center h-full">
+            <icon-image size="24" class="mr-2 flex-shrink-0" />
+            <span class="flex-grow">Image Manager</span>
           </div>
         </RouterLink>
 
-        <RouterLink to="/admin/tag-list">
-          <div class="bg-gray-100 p-4 rounded-md cursor-pointer flex flex-row items-center">
-            <icon-tags size="24" class="mr-2" />
-            Tag Manager
+        <RouterLink to="/admin/tag-list" class="h-full">
+          <div class="bg-gray-100 p-4 rounded-md cursor-pointer flex flex-row items-center h-full">
+            <icon-tags size="24" class="mr-2 flex-shrink-0" />
+            <span class="flex-grow">Tag Manager</span>
           </div>
         </RouterLink>
 
-        <RouterLink to="/admin/category-list">
-          <div class="bg-gray-100 p-4 rounded-md cursor-pointer flex flex-row items-center">
-            <icon-subscribe size="24" class="mr-2" />
-            Category Manager
+        <RouterLink to="/admin/category-list" class="h-full">
+          <div class="bg-gray-100 p-4 rounded-md cursor-pointer flex flex-row items-center h-full">
+            <icon-subscribe size="24" class="mr-2 flex-shrink-0" />
+            <span class="flex-grow">Category Manager</span>
           </div>
         </RouterLink>
       </div>
