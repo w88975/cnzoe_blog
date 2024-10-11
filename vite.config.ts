@@ -9,6 +9,7 @@ export default defineConfig({
 		vue(),
 		vueJsx(),
 	],
+	base: '/cnzoe_blog/',
 	resolve: {
 		alias: {
 			'@': fileURLToPath(new URL('./src', import.meta.url))
