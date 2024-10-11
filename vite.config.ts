@@ -18,7 +18,7 @@ export default defineConfig({
 		host: '0.0.0.0',
 		proxy: {
 			'^/api': {
-				target: 'https://blog.lwhzak.workers.dev',
+				target: process.env.NODE_ENV === 'production' ? 'https://blog.lwhzak.workers.dev' : 'http://localhost:8787',
 				changeOrigin: true,
 				autoRewrite: true,
 			}
