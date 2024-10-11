@@ -42,8 +42,8 @@ const router = createRouter({
                     component: () => import('../views/admin/PostList.vue')
                 },
                 {
-                    path: 'image-list',
-                    name: 'image-list',
+                    path: 'file-list',
+                    name: 'file-list',
                     // @ts-ignore
                     component: () => import('../views/admin/ImageList.vue')
                 },

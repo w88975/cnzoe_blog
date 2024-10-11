@@ -13,20 +13,26 @@
     <!-- 文件夹,文件列表 -->
     <a-spin class="w-full" :loading="loading || uploadLoading">
         <BoxView>
-            <template v-if="currentDir !== '/'">
-                <a-button type="text" @click="goBack">返回上一级</a-button>
-            </template>
+            <a-breadcrumb class="mb-4">
+                <a-breadcrumb-item @click="navigateTo('/')">Root</a-breadcrumb-item>
+                <template v-for="(segment, index) in pathSegments" :key="index">
+                    <a-breadcrumb-item @click="navigateTo(segment.path)">
+                        {{ segment.name }}
+                    </a-breadcrumb-item>
+                </template>
+            </a-breadcrumb>
+
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 auto-rows-auto relative"
                 @dragenter.prevent="handleDragEnter" @dragover.prevent @dragleave.prevent="handleDragLeave"
                 @drop.prevent="handleFileDrop">
-                <div @click="folderClick(file.full_path)" v-for="file in fileList" :key="file.id"
+                <div @click="folderClick(file.type, file.full_path)" v-for="file in fileList" :key="file.id"
                     class="flex flex-col items-center p-2 border rounded cursor-pointer active:opacity-50">
-                    <!-- <icon-folder size="24" class="mb-2" /> -->
                     <IconFile size="24" :type="file.type" :fileName="file.path" />
                     <span class="text-sm text-center truncate w-full block">{{ file.path }}</span>
                 </div>
                 <!-- 上传按钮 -->
-                <div class="flex flex-col items-center p-2 border rounded cursor-pointer active:opacity-50">
+                <div class="flex flex-col items-center p-2 border rounded cursor-pointer active:opacity-50"
+                    @click="triggerFileUpload">
                     <icon-plus size="24" class="mb-2" />
                     <span class="text-sm text-center break-words">上传</span>
                 </div>
@@ -40,6 +46,9 @@
         </BoxView>
     </a-spin>
 
+    <!-- Hidden file input -->
+    <input type="file" ref="fileInput" @change="handleFileUpload" style="display: none;" multiple>
+
     <!-- 新建文件夹弹出框 -->
     <a-modal v-model:visible="createFolderVisible" title="新建文件夹" @ok="handleCreateFolder">
         <!-- 当前目录展示 -->
@@ -50,39 +59,64 @@
 
 <script setup lang="js">
 import BoxView from '@/components/BoxView.vue'
-import { IconFolder, IconPlus } from '@arco-design/web-vue/es/icon';
+import { IconPlus } from '@arco-design/web-vue/es/icon';
 import IconFile from '@/components/icons/iconFile.vue'
 import { getFileList, createFolder, uploadFile } from '@/api/files'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 import { Message } from '@arco-design/web-vue'
+import { useRouter, useRoute } from 'vue-router'
+import { OSS_URL } from '@/config'
+
+const router = useRouter()
+const route = useRoute()
 
 const fileList = ref([])
 const loading = ref(false)
 const currentDir = ref('/')
-const lastDirs = ref([])
+// 移除 lastDirs
+
 const createFolderVisible = ref(false)
 const createFolderName = ref('')
 const isDragging = ref(false)
 const fileInput = ref(null)
-const pendingFiles = ref([]) // New state to track files ready for upload
 const uploadLoading = ref(false)
 const dragCounter = ref(0)
 
+const pathSegments = computed(() => {
+    const segments = currentDir.value.split('/').filter(Boolean)
+    return segments.map((segment, index) => ({
+        name: segment,
+        path: '/' + segments.slice(0, index + 1).join('/')
+    }))
+})
+
+const navigateTo = (path) => {
+    router.push({ query: { dir: encodeURIComponent(path) } })
+}
+
 onMounted(() => {
+    const urlDir = route.query.dir
+    if (urlDir) {
+        currentDir.value = decodeURIComponent(urlDir)
+    }
     getFileListData(currentDir.value)
 })
 
-// 返回上一级
-const goBack = () => {
-    if (lastDirs.value.length > 0) {
-        currentDir.value = lastDirs.value.pop()
+watch(() => route.query.dir, (newDir) => {
+    if (newDir) {
+        currentDir.value = decodeURIComponent(newDir)
         getFileListData(currentDir.value)
     }
-}
+})
 
-const folderClick = async (path) => {
-    lastDirs.value.push(currentDir.value)
-    await getFileListData(path)
+
+const folderClick = async (type, path) => {
+    if (type === 0) {
+        await router.push({ query: { dir: encodeURIComponent(path) } })
+        // getFileListData will be triggered by the watch function
+    } else {
+        window.open(`${OSS_URL}${path}`, '_blank')
+    }
 }
 
 const getFileListData = async (dir) => {
@@ -152,27 +186,29 @@ const handleFileDrop = async (event) => {
     }
 }
 
-const removeFile = (index) => {
-    pendingFiles.value.splice(index, 1) // Remove file from pending list
+const triggerFileUpload = () => {
+    fileInput.value.click()
 }
 
-const uploadAllFiles = async () => {
-    // Implement the logic to upload all files in pendingFiles
-    for (const file of pendingFiles.value) {
-        // Upload each file (you need to implement the actual upload logic)
-        console.log('Uploading file:', file)
-        // 按顺序上传文件
-        await uploadFile({ file: file, dir: currentDir.value })
+const handleFileUpload = async (event) => {
+    const files = Array.from(event.target.files)
+    uploadLoading.value = true
 
+    try {
+        for (const file of files) {
+            await uploadFile({ file: file, dir: currentDir.value })
+        }
+        Message.success('Files uploaded successfully')
+        await getFileListData(currentDir.value)
+    } catch (error) {
+        Message.error('Error uploading files')
+        console.error('Upload error:', error)
+    } finally {
+        uploadLoading.value = false
+        // Reset the file input
+        event.target.value = ''
     }
-    // Clear the pending files after upload
-    pendingFiles.value = []
 }
 </script>
 
-<style scoped>
-.grid {
-    min-height: 200px;
-    /* 确保拖拽区域有一定的高度 */
-}
-</style>
+<style scoped></style>

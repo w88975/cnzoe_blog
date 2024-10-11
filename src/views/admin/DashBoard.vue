@@ -9,7 +9,7 @@
                 </div>
             </RouterLink>
 
-            <RouterLink to="/admin/image-list">
+            <RouterLink to="/admin/file-list">
                 <div class="bg-gray-100 p-4 rounded-md cursor-pointer flex flex-row items-center">
                     <icon-image size="24" class="mr-2" />
                     Image Manager
