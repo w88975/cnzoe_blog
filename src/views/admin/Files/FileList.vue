@@ -2,11 +2,11 @@
   <TitleLine title="File List">
     <template #right>
       <a-space>
-        <a-button type="primary" @click="showCreateFolderModal">新建文件夹</a-button>
+        <NvaButton type="primary" @click="showCreateFolderModal">新建文件夹</NvaButton>
         <!-- Add batch delete button -->
-        <a-button type="primary" danger :disabled="selectedFiles.length === 0" @click="confirmBatchDelete">
+        <NvaButton type="primary" danger :disabled="selectedFiles.length === 0" @click="confirmBatchDelete">
           批量删除 ({{ selectedFiles.length }})
-        </a-button>
+        </NvaButton>
       </a-space>
     </template>
   </TitleLine>
@@ -88,11 +88,11 @@
   <input type="file" ref="fileInput" @change="handleFileSelect" style="display: none;" multiple>
 
   <!-- 新建文件夹弹出框 -->
-  <a-modal v-model:visible="createFolderVisible" title="新建文件夹" @ok="handleCreateFolder">
+  <NvaModal v-model="createFolderVisible" title="新建文件夹" @ok="handleCreateFolder">
     <!-- 当前目录展示 -->
     <div class="text-sm text-gray-500 mb-4">当前目录：{{ currentDir }}</div>
-    <a-input v-model="createFolderName" placeholder="请输入文件夹名称" />
-  </a-modal>
+    <NvaInput v-model="createFolderName" placeholder="请输入文件夹名称" />
+  </NvaModal>
 
   <!-- 展示文件信息 -->
   <DrawerPanel v-model:visible="fileInfoVisible">
@@ -104,6 +104,11 @@
     @cancel="batchDeleteModalVisible = false">
     <p>确定要删除选中的 {{ selectedFiles.length }} 个文件/文件夹吗？此操作不可撤销。</p>
   </a-modal>
+
+  <!-- <NvaModal>
+    <NvaInput placeholder="请输入文件夹名称" />
+    <NvaButton>Save</NvaButton>
+  </NvaModal> -->
 </template>
 
 <script setup lang="js">

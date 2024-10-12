@@ -24,7 +24,9 @@ VueMarkdownEditor.use(vuepressTheme, {
 
 // 全局注册组件
 import TitleLine from '@/components/TitleLine.vue'
-
+import NvaModal from '@/components/modal/index.vue'
+import NvaInput from '@/components/input/index.vue'
+import NvaButton from '@/components/button/index.vue'
 
 
 const bus = mitt()
@@ -35,4 +37,7 @@ app.use(router)
 app.use(ArcoVue);
 app.use(VueMarkdownEditor)
 app.component('TitleLine', TitleLine)
+app.component('NvaModal', NvaModal)
+app.component('NvaInput', NvaInput)
+app.component('NvaButton', NvaButton)
 app.mount('#app')

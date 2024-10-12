@@ -17,6 +17,7 @@ export default defineConfig({
 	},
 	server: {
 		host: '0.0.0.0',
+		port: 8080,
 		proxy: {
 			'^/api': {
 				target: process.env.NODE_ENV === 'production' ? 'https://blog.lwhzak.workers.dev' : 'http://localhost:8787',
