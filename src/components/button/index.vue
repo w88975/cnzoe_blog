@@ -1,11 +1,11 @@
 <template>
     <button :class="[
         'px-4 py-2 font-semibold transition-opacity duration-200 ease-in-out',
-        'focus:outline-none active:opacity-70',
+        'focus:outline-none active:opacity-70 cursor-pointer',
         colorClasses[color],
         { 'w-full': block },
         { 'opacity-50 cursor-not-allowed': disabled }
-    ]" :disabled="disabled" @click="$emit('click')">
+    ]" :disabled="disabled">
         <slot></slot>
     </button>
 </template>
@@ -38,6 +38,6 @@ export default {
                 warning: 'bg-yellow-600 text-black hover:bg-yellow-700 disabled:hover:bg-yellow-600'
             }
         }
-    }
+    },
 }
 </script>

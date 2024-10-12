@@ -1,12 +1,12 @@
 <template>
     <Transition name="modal-backdrop">
         <div v-if="modelValue" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-0">
-            <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" @click="cancel"></div>
+            <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" @click="handleCancel"></div>
 
             <Transition name="modal-content">
                 <div class="relative z-10 w-full max-w-lg p-6 mx-auto bg-white shadow-xl sm:max-w-xl">
                     <div class="absolute top-0 right-0 pt-4 pr-4">
-                        <button @click="cancel"
+                        <button @click="handleCancel"
                             class="text-gray-400 hover:text-gray-500 focus:outline-none focus:text-gray-500">
                             <span class="sr-only">关闭</span>
                             <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -29,11 +29,11 @@
 
                     <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
                         <slot name="footer">
-                            <NvaButton @click="ok"
+                            <NvaButton @click.once="ok"
                                 class="w-full px-4 py-2 text-base font-medium text-white bg-indigo-600 border border-transparent shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm">
                                 确定
                             </NvaButton>
-                            <NvaButton @click="cancel"
+                            <NvaButton @click.once="handleCancel"
                                 class="w-full px-4 py-2 mt-3 text-base font-medium text-gray-700 bg-white border border-gray-300 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm">
                                 取消
                             </NvaButton>
@@ -69,7 +69,7 @@ export default {
             this.$emit('ok')
             this.$emit('update:modelValue', false)
         },
-        cancel() {
+        handleCancel() {
             this.$emit('cancel')
             this.$emit('update:modelValue', false)
         }
@@ -89,27 +89,22 @@ export default {
 }
 
 .modal-content-enter-active {
-    animation: modal-in 0.4s ease-out;
+    animation: modal-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .modal-content-leave-active {
-    animation: modal-out 0.3s ease-in;
+    animation: modal-out 0.3s cubic-bezier(0.34, 0, 0.64, 1);
 }
 
 @keyframes modal-in {
     0% {
         opacity: 0;
-        transform: scale(0.8) translateY(30px);
-    }
-
-    50% {
-        opacity: 1;
-        transform: scale(1.05) translateY(-10px);
+        transform: scale(0.4);
     }
 
     100% {
         opacity: 1;
-        transform: scale(1) translateY(0);
+        transform: scale(1);
     }
 }
 
@@ -121,7 +116,7 @@ export default {
 
     100% {
         opacity: 0;
-        transform: scale(0.8);
+        transform: scale(0.4);
     }
 }
 </style>
