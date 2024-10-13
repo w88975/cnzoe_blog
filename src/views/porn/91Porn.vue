@@ -5,7 +5,7 @@
       <!-- 渲染数据 -->
       <div class="space-y-2">
         <div v-for="item in latestFeatured" :key="item.id">
-          <router-link :to="{ name: '91porn-detail', query: { tid: item.tid } }"
+          <router-link target="_blank"  :to="{ name: '91porn-detail', query: { tid: item.tid } }"
             :class="{ 'text-red-600 font-bold': item.isHighlighted, 'hover:text-blue-600': !item.isHighlighted }"
             class="cursor-pointer truncate block">{{ item.title }}</router-link>
         </div>
@@ -16,7 +16,7 @@
       <!-- 渲染数据 -->
       <div class="space-y-2">
         <div v-for="item in latestLiked" :key="item.id">
-          <router-link :to="{ name: '91porn-detail', query: { tid: item.tid } }"
+          <router-link target="_blank"  :to="{ name: '91porn-detail', query: { tid: item.tid } }"
             :class="{ 'text-red-600 font-bold': item.isHighlighted, 'hover:text-blue-600': !item.isHighlighted }"
             class="cursor-pointer truncate block">{{ item.title }}</router-link>
         </div>
@@ -27,7 +27,7 @@
       <!-- 渲染数据 -->
       <div class="space-y-2">
         <div v-for="item in weeklyHot" :key="item.id">
-          <router-link :to="{ name: '91porn-detail', query: { tid: item.tid } }"
+          <router-link target="_blank"  :to="{ name: '91porn-detail', query: { tid: item.tid } }"
             :class="{ 'text-red-600 font-bold': item.isHighlighted, 'hover:text-blue-600': !item.isHighlighted }"
             class="cursor-pointer truncate block">{{ item.title }}</router-link>
         </div>
@@ -39,8 +39,8 @@
     <!-- 渲染数据 -->
     <div class="space-y-2">
       <div v-for="item in hotPosts" :key="item.id">
-        <router-link :to="{ name: '91porn-detail', query: { tid: item.tid } }" :class="'text-red-600 font-bold '"
-          class="cursor-pointer truncate block">
+        <router-link  :to="{ name: '91porn-detail', query: { tid: item.tid } }" :class="'text-red-600 font-bold '"
+          class="cursor-pointer truncate block" target="_blank" rel="noopener noreferrer">
           {{ item.cache ? '[已缓存]' : '' }}
           {{ item.full_save ? '[已保存]' : '' }}
           {{ item.title }}</router-link>
