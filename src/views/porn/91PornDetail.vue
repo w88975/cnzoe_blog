@@ -94,6 +94,12 @@ onMounted(async () => {
   nextTick(() => {
     handleImageLoad()
   })
+  // 
+  if (!postInfo.value.full_save) {
+    console.log('自动缓存')
+    saveDocument()
+  }
+  
 })
 
 const saveDocument = async () => {
@@ -130,7 +136,7 @@ const saveDocument = async () => {
       await Promise.all(uploadPromises)
 
       await $$91porn_UpdateSavedImgs(tid.value, savedImgs.join(','))
-      alert('文档保存成功！')
+      console.log('文档保存成功！')
     } catch (error) {
       console.error('保存文档时出错：', error)
       alert('保存文档失败，请稍重试。')
