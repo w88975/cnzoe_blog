@@ -1,0 +1,22 @@
+
+import instance from './index'
+
+// // db相关
+// authRouter('all', '/api/db/tables', $$DB_GetTables)
+// authRouter('all', '/api/db/table/:tableName', $$DB_GetTableStructure)
+
+
+// 获取表列表
+export const getTables = () => {
+    return instance.get('/api/db/tables')
+}
+
+// 获取表结构
+export const getTableStructure = (tableName) => {
+    return instance.get(`/api/db/table/${tableName}`)
+} 
+
+// 修改表结构
+export const modifyTableStructure = (tableName, newStructure) => {
+    return instance.post('/api/db/modify-table-structure', { tableName, newStructure })
+}

@@ -69,6 +69,11 @@ const router = createRouter({
                     },
                     // @ts-ignore
                     component: () => import('../views/admin/MDEditor.vue')
+                },
+                {
+                    path: 'database',
+                    name: 'database',
+                    component: () => import('../views/admin/Database/index.vue')
                 }
             ]
         },

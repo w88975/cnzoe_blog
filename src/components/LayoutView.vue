@@ -69,6 +69,10 @@ const menuList = ref([
   {
     name: $User.isAuthenticated ? 'Logout' : 'Login',
     path: $User.isAuthenticated ? '/login?logout=true' : '/login'
+  },
+  {
+    name: 'Database',
+    path: '/admin/database'
   }
 ])
 const toggleDrawer = () => {

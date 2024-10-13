@@ -30,11 +30,11 @@
                     <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
                         <slot name="footer">
                             <NvaButton @click.once="ok"
-                                class="w-full px-4 py-2 text-base font-medium text-white bg-indigo-600 border border-transparent shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm">
+                                class="w-full mb-4 sm:ml-3 sm:w-auto sm:text-sm">
                                 确定
                             </NvaButton>
-                            <NvaButton @click.once="handleCancel"
-                                class="w-full px-4 py-2 mt-3 text-base font-medium text-gray-700 bg-white border border-gray-300 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm">
+                            <NvaButton @click.once="handleCancel" class="w-full mb-4 sm:ml-3 sm:w-auto sm:text-sm"
+                                >
                                 取消
                             </NvaButton>
                         </slot>
