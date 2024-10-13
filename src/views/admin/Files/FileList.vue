@@ -62,7 +62,7 @@
           <p class="text-white text-xl font-bold">Drop files here to upload</p>
         </div>
       </div>
-      <!-- 预览展示 -->
+
     </BoxView>
   </a-spin>
 
