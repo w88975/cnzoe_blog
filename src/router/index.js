@@ -35,11 +35,17 @@ const router = createRouter({
 				{
 					path: '/app/91porn',
 					name: '91porn',
+					meta: {
+						requiresAuth: true
+					},
 					component: () => import('../views/porn/91Porn.vue')
 				},
 				{
 					path: '/app/91porn-detail',
 					name: '91porn-detail',
+					meta: {
+						requiresAuth: true
+					},
 					component: () => import('../views/porn/91PornDetail.vue')
 				}
 			]
