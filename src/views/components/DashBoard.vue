@@ -37,6 +37,13 @@
             <span class="flex-grow">Database Manager</span>
           </div>
         </RouterLink>
+
+        <RouterLink to="/app/91porn" class="h-full">
+          <div class="bg-gray-100 p-4 rounded-md cursor-pointer flex flex-row items-center h-full">
+            <icon-xigua-color size="24" class="mr-2 flex-shrink-0" />
+            <span class="flex-grow">91porn Spider</span>
+          </div>
+        </RouterLink>
       </div>
     </BoxView>
   </div>
@@ -45,7 +52,7 @@
 <script setup lang="js">
 import { ref, onMounted } from 'vue'
 import BoxView from '@/components/BoxView.vue'
-import { IconFile, IconImage, IconTags, IconSubscribe, IconStorage } from '@arco-design/web-vue/es/icon'
+import { IconFile, IconImage, IconTags, IconSubscribe, IconStorage, IconXiguaColor } from '@arco-design/web-vue/es/icon'
 import { $User } from '@/store/user'
 
 
