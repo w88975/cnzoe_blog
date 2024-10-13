@@ -1,0 +1,1 @@
+import{i as n}from"./index-C-uzWTWU.js";const s=async()=>n.get("/api/91porn/today-hot",{}),p=async t=>n.get("/api/91porn/post-content",{params:{tid:t}}),r=async(t,o)=>n.post("/api/91porn/update-saved-imgs",{tid:t,savedImgs:o});export{s as $,p as a,r as b};
