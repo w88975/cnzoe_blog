@@ -15,3 +15,8 @@ export const $$91porn_PostContent = async (tid) => {
 export const $$91porn_UpdateSavedImgs = async (tid, savedImgs) => {
   return instance.post('/api/91porn/update-saved-imgs', { tid, savedImgs })
 }
+
+// /api/91porn/get-featured-posts
+export const $$91porn_GetFeaturedPosts = async (page = 1, pageSize = 20) => {
+  return instance.post('/api/91porn/get-featured-posts', { page, pageSize })
+}
