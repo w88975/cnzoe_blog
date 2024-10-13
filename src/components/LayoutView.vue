@@ -59,10 +59,6 @@ const menuList = ref([
     path: '/'
   },
   {
-    name: 'Admin',
-    path: '/admin'
-  },
-  {
     name: 'About',
     path: '/about'
   },
@@ -70,10 +66,6 @@ const menuList = ref([
     name: $User.isAuthenticated ? 'Logout' : 'Login',
     path: $User.isAuthenticated ? '/login?logout=true' : '/login'
   },
-  {
-    name: 'Database',
-    path: '/admin/database'
-  }
 ])
 const toggleDrawer = () => {
   drawerVisible.value = !drawerVisible.value

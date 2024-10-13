@@ -14,44 +14,55 @@
   <!-- 文件夹,文件列表 -->
   <a-spin class="w-full" :loading="loading || uploadLoading">
     <BoxView>
-      <a-breadcrumb class="mb-4">
-        <a-breadcrumb-item @click="navigateTo('/')">Root</a-breadcrumb-item>
-        <template v-for="(segment, index) in pathSegments" :key="index">
-          <a-breadcrumb-item @click="navigateTo(segment.path)">
-            {{ segment.name }}
-          </a-breadcrumb-item>
-        </template>
-      </a-breadcrumb>
+      <div class="flex flex-row items-center justify-between mb-4 overflow-hidden">
+        <a-breadcrumb class="flex-1 min-w-0 max-w-[50%]">
+          <a-breadcrumb-item @click="navigateTo('/')" class="truncate">Root</a-breadcrumb-item>
+          <template v-for="(segment, index) in pathSegments" :key="index">
+            <a-breadcrumb-item @click="navigateTo(segment.path)" class="truncate">
+              {{ segment.name }}
+            </a-breadcrumb-item>
+          </template>
+        </a-breadcrumb>
+        <!-- 切换视图按钮, 列表/卡片 -->
+        <!-- 切换视图按钮 -->
+        <div class="flex flex-row items-center hidden sm:flex">
+          <a-switch v-model="isListView" type="line" size="mini" class="mr-4 flex-shrink-0">
+            <template #checked-icon>
+              <!-- <icon-unordered-list /> -->
+            </template>
+            <template #unchecked-icon>
+              <!-- <icon-apps /> -->
+            </template>
+          </a-switch>
+          <!-- 设置别名按钮 -->
+          <a-button type="primary" size="mini" @click="showSetAliasModal" class="flex-shrink-0">设置别名</a-button>
+        </div>
+      </div>
 
+      <!-- 文件夹展示 -->
       <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 auto-rows-auto relative"
         @dragenter.prevent="handleDragEnter" @dragover.prevent @dragleave.prevent="handleDragLeave"
         @drop.prevent="handleFileDrop">
-        <div v-for="file in fileList" :key="file.id"
-          class="flex flex-col items-center p-2 border rounded cursor-pointer active:opacity-50 relative">
-          <!-- Add checkbox for file selection -->
-          <div class="absolute top-2 right-2 z-10">
-            <a-checkbox :model-value="selectedFiles.includes(file.id)"
-              @update:model-value="toggleFileSelection(file.id)" />
-          </div>
 
-          <div @click="folderClick(file.type, file.full_path, file)"
-            class="w-full h-full flex flex-col items-center justify-center">
-            <IconFile size="24" :type="file.type" :fileName="file.path" />
-            <span class="text-sm text-center truncate w-full block">{{ file.path }}</span>
-          </div>
-        </div>
+        <!-- 默认视图 -->
+        <ViewModeFolder v-if="isListView" :file-list="fileList" @folderClick="folderClick"
+          @triggerFileUpload="triggerFileUpload" @updateSelectedFiles="updateSelectedFiles" />
+        <!-- 预览视图 -->
+        <ViewModePreview v-else :file-list="fileList" @folderClick="folderClick" @triggerFileUpload="triggerFileUpload"
+          @updateSelectedFiles="updateSelectedFiles" />
         <!-- 上传按钮 -->
-        <div class="flex flex-col items-center p-2 border rounded cursor-pointer active:opacity-50"
+        <!-- <div class="flex flex-col items-center p-2 border rounded cursor-pointer active:opacity-50"
           @click="triggerFileUpload">
           <icon-plus size="24" class="mb-2" />
           <span class="text-sm text-center break-words">上传</span>
-        </div>
+        </div> -->
 
         <!-- Drag and drop overlay -->
         <div v-if="isDragging" class="absolute inset-0 bg-blue-500 bg-opacity-50 flex items-center justify-center">
           <p class="text-white text-xl font-bold">Drop files here to upload</p>
         </div>
       </div>
+      <!-- 预览展示 -->
     </BoxView>
   </a-spin>
 
@@ -94,9 +105,15 @@
     <NvaInput v-model="createFolderName" placeholder="请输入文件夹名称" />
   </NvaModal>
 
+
+  <!-- 设置别名弹出框 -->
+  <NvaModal v-model="setAliasVisible" title="设置别名" @ok="handleSetAlias">
+    <NvaInput v-model="aliasInput" placeholder="请输入别名" />
+  </NvaModal>
+
   <!-- 展示文件信息 -->
   <DrawerPanel v-model:visible="fileInfoVisible">
-    <FileInfo :file="currentFile" @file-deleted="handleFileDeleted" />
+    <FileInfo :file="currentFile" @file-deleted="handleFileDeleted" @alias-updated="handleAliasUpdated" />
   </DrawerPanel>
 
   <!-- Add confirmation modal for batch delete -->
@@ -115,15 +132,16 @@
 import { computed, onMounted, reactive, ref, toRefs, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { Message, Modal } from '@arco-design/web-vue'
-import { IconPlus } from '@arco-design/web-vue/es/icon'
-import { getFileList, createFolder, uploadFile, saveUploadData, deleteFile } from '@/api/files'
+import { IconPlus, IconCheck, IconClose } from '@arco-design/web-vue/es/icon'
+import { getFileList, createFolder, uploadFile, saveUploadData, deleteFile, setFileAlias } from '@/api/files'
 import { uploadFileToR2 } from '@/utils/aws-r2'
-import { formatFileSize } from '@/utils/format'
 import BoxView from '@/components/BoxView.vue'
 import DrawerPanel from '@/components/drawer/DrawerPanel.vue'
 import FileInfo from './FileInfo.vue'
-import IconFile from '@/components/icons/iconFile.vue'
 
+// ViewModeFolder
+import ViewModeFolder from './ViewModeFolder.vue'
+import ViewModePreview from './ViewModePreview.vue'
 const router = useRouter()
 const route = useRoute()
 
@@ -138,8 +156,10 @@ const isDragging = ref(false)
 const fileInput = ref(null)
 const uploadLoading = ref(false)
 const dragCounter = ref(0)
-
+const isListView = ref(false)
 const currentFile = ref(null)
+
+
 
 const pathSegments = computed(() => {
   const segments = currentDir.value.split('/').filter(Boolean)
@@ -338,6 +358,10 @@ const handleFileSelect = (event) => {
   event.target.value = '' // 重置文件输入以允许选择相同的
 }
 
+const updateSelectedFiles = (newSelectedFiles) => {
+  selectedFiles.value = newSelectedFiles
+}
+
 const triggerFileUpload = () => {
   fileInput.value.click()
 }
@@ -351,15 +375,6 @@ const handleFileDeleted = async ({ success, fileId }) => {
 
 const selectedFiles = ref([])
 const batchDeleteModalVisible = ref(false)
-
-const toggleFileSelection = (fileId) => {
-  const index = selectedFiles.value.indexOf(fileId)
-  if (index === -1) {
-    selectedFiles.value.push(fileId)
-  } else {
-    selectedFiles.value.splice(index, 1)
-  }
-}
 
 const confirmBatchDelete = () => {
   batchDeleteModalVisible.value = true
@@ -382,6 +397,27 @@ const performBatchDelete = async () => {
   }
 }
 
+const setAliasVisible = ref(false)
+const aliasInput = ref('')
+
+const showSetAliasModal = (file) => {
+  currentFile.value = file
+  setAliasVisible.value = true
+}
+
+const handleSetAlias = async () => {
+  loading.value = true
+  await setFileAlias({
+    path: currentDir.value,
+    alias: aliasInput.value
+  })
+  loading.value = false
+}
+
+const handleAliasUpdated = async ({ fileId, newAlias }) => {
+  // 刷新当前目录
+  await getFileListData(currentDir.value)
+}
 </script>
 
 <style scoped></style>

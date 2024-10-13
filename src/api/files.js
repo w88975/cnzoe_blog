@@ -14,6 +14,11 @@ export const createFolder = (data) => {
     return instance.post('/api/files/create-folder', { ...data })
 }
 
+// 设置文件别名
+export const setFileAlias = (data) => {
+    return instance.post('/api/files/set-alias', { ...data })
+}
+
 // 上传文件
 // 废弃, 因为可以纯前端上传, 不受大小限制
 export const uploadFile = (data) => {

@@ -13,10 +13,24 @@
       <p><strong>File Type:</strong> {{ file.file_type }}</p>
       <p><strong>Created At:</strong> {{ formatDate(file.created_at) }}</p>
       <p><strong>Updated At:</strong> {{ formatDate(file.updated_at) }}</p>
+      <!-- New alias input field -->
+      <div>
+        <p class="mb-1"><strong>Alias:</strong></p>
+        <a-input v-model="alias" placeholder="Set an alias for this file" :default-value="file.alias || file.path"
+          @change="handleAliasChange">
+          <template #suffix>
+            <a-button type="text" @click="saveAlias" :loading="aliasSaving">
+              Save
+            </a-button>
+          </template>
+        </a-input>
+      </div>
       <!-- 显示删除按钮 -->
       <a-popconfirm content="确认删除此文件吗？" type="warning" :ok-loading="deleteLoading" @before-ok="handleDeleteFile">
         <a-button type="primary" class="mt-6">删除</a-button>
       </a-popconfirm>
+
+
     </div>
     <div v-else>
       No file information available.
@@ -27,7 +41,7 @@
 <script setup lang="js">
 import { defineProps, ref, defineEmits } from 'vue'
 import { OSS_URL } from '@/config'
-import { deleteFile } from '@/api/files'
+import { deleteFile, setFileAlias } from '@/api/files'
 import { Message } from '@arco-design/web-vue'
 
 const props = defineProps({
@@ -37,9 +51,11 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['fileDeleted'])
+const emit = defineEmits(['fileDeleted', 'aliasUpdated'])
 
 const deleteLoading = ref(false)
+const alias = ref(props.file.alias || props.file.path)
+const aliasSaving = ref(false)
 
 const handleDeleteFile = async (done) => {
   deleteLoading.value = true
@@ -60,6 +76,30 @@ const handleDeleteFile = async (done) => {
     done(false)
   } finally {
     deleteLoading.value = false
+  }
+}
+
+const handleAliasChange = (value) => {
+  alias.value = value
+}
+
+const saveAlias = async () => {
+  aliasSaving.value = true
+  try {
+    const res = await setFileAlias({
+      fileId: props.file.id,
+      alias: alias.value
+    })
+    if (res.data.success) {
+      Message.success('Alias saved successfully')
+      emit('aliasUpdated', { fileId: props.file.id, newAlias: alias.value })
+    } else {
+      throw new Error('Failed to save alias')
+    }
+  } catch (error) {
+    Message.error('Failed to save alias: ' + error.message)
+  } finally {
+    aliasSaving.value = false
   }
 }
 
