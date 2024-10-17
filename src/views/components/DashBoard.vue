@@ -41,7 +41,7 @@
         <RouterLink to="/app/91porn" class="h-full">
           <div class="bg-gray-100 p-4 rounded-md cursor-pointer flex flex-row items-center h-full">
             <icon-xigua-color size="24" class="mr-2 flex-shrink-0" />
-            <span class="flex-grow">91porn Spider</span>
+            <span class="flex-grow">Video Spider</span>
           </div>
         </RouterLink>
       </div>

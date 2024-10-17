@@ -4,7 +4,8 @@
     <div>
       <NvaButton @click="handeGetTables" class="mb-4">获取表结构</NvaButton>
       <div class="mt-4">
-        <select v-model="selectedTable" @change="handleGetTableStructure" class="block w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        <select v-model="selectedTable" @change="handleGetTableStructure"
+          class="block w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
           <option value="" disabled selected>选择一个表</option>
           <option v-for="table in tables" :key="table.name" :value="table.name">
             {{ table.name }}
@@ -26,37 +27,25 @@
           <tbody>
             <tr v-for="(column, index) in tableStructure" :key="column._key" class="hover:bg-gray-50">
               <td class="border border-gray-300 px-4 py-2">
-                <input 
-                  v-model.lazy="column.name" 
-                  class="border border-gray-300 rounded-md w-full px-2 py-1" 
-                  @change="updateColumn(column)"
-                />
+                <input v-model.lazy="column.name" class="border border-gray-300 rounded-md w-full px-2 py-1"
+                  @change="updateColumn(column)" />
               </td>
               <td class="border border-gray-300 px-4 py-2">
-                <select 
-                  v-model="column.type" 
-                  class="border border-gray-300 rounded-md w-full px-2 py-1"
-                  @change="updateColumn(column)"
-                >
+                <select v-model="column.type" class="border border-gray-300 rounded-md w-full px-2 py-1"
+                  @change="updateColumn(column)">
                   <option v-for="type in sqliteTypes" :key="type" :value="type">{{ type }}</option>
                 </select>
               </td>
               <td class="border border-gray-300 px-4 py-2">
-                <select 
-                  v-model="column.notnull" 
-                  class="border border-gray-300 rounded-md w-full px-2 py-1"
-                  @change="updateColumn(column)"
-                >
+                <select v-model="column.notnull" class="border border-gray-300 rounded-md w-full px-2 py-1"
+                  @change="updateColumn(column)">
                   <option :value="1">是</option>
                   <option :value="0">否</option>
                 </select>
               </td>
               <td class="border border-gray-300 px-4 py-2">
-                <input 
-                  v-model.lazy="column.dflt_value" 
-                  class="border border-gray-300 rounded-md w-full px-2 py-1" 
-                  @change="updateColumn(column)"
-                />
+                <input v-model.lazy="column.dflt_value" class="border border-gray-300 rounded-md w-full px-2 py-1"
+                  @change="updateColumn(column)" />
               </td>
               <td class="border border-gray-300 px-4 py-2">
                 <button @click="addBefore(index)" class="text-blue-600 hover:text-blue-800 underline mr-2">往前新增</button>

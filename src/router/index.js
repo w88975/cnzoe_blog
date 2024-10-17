@@ -95,7 +95,7 @@ const router = createRouter({
 					meta: {
 						requiresAuth: true
 					},
-					component: () => import('../views/admin/Database/index.vue')
+					component: () => import('../views/admin/Database/Console.vue')
 				}
 			]
 		},

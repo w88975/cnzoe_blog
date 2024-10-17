@@ -5,7 +5,7 @@
       <RouterLink to="/">
         <div class="flex items-center cursor-pointer active:opacity-50">
           <IconLogo class="w-8 h-8" />
-          <span class="text-2xl font-bold ml-2">My APP Name</span>
+          <span class="text-2xl font-bold ml-2">KamiSama</span>
         </div>
       </RouterLink>
 
