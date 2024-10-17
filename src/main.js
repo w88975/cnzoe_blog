@@ -27,7 +27,8 @@ import TitleLine from '@/components/TitleLine.vue'
 import NvaModal from '@/components/modal/index.vue'
 import NvaInput from '@/components/input/index.vue'
 import NvaButton from '@/components/button/index.vue'
-
+import BoxView from '@/components/BoxView.vue'
+import NavTab from '@/components/tab/index.vue'
 
 const bus = mitt()
 const app = createApp(App)
@@ -40,4 +41,6 @@ app.component('TitleLine', TitleLine)
 app.component('NvaModal', NvaModal)
 app.component('NvaInput', NvaInput)
 app.component('NvaButton', NvaButton)
+app.component('NavTab', NavTab)
+app.component('BoxView', BoxView)
 app.mount('#app')
