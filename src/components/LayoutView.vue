@@ -1,7 +1,7 @@
 <template>
   <div class="md:max-w-5xl mx-auto flex-1 flex-col flex">
     <!-- header -->
-    <div class="flex justify-between items-center p-4">
+    <div class="flex justify-between items-center p-4" :class="{ 'pt-10': isPWA }">
       <RouterLink to="/">
         <div class="flex items-center cursor-pointer active:opacity-50">
           <IconLogo class="w-8 h-8" />
@@ -51,6 +51,17 @@ import DrawerPanel from '@/components/drawer/DrawerPanel.vue'
 import FooterView from '@/components/FooterView.vue'
 
 import { $User } from '@/store/user'
+
+const isPWA = ref(false);
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+if (isIOS) {
+  // Check if the app is running in standalone mode (PWA) on iOS
+  isPWA.value = window.navigator.standalone === true;
+} else {
+  // For other platforms, use the previous method
+  isPWA.value = window.matchMedia('(display-mode: standalone)').matches;
+}
 
 const drawerVisible = ref(false)
 const menuList = ref([

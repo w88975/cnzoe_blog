@@ -15,9 +15,9 @@
             <NvaButton @click="saveChanges" :disabled="!hasChanges">保存更改</NvaButton>
         </div>
 
-        <div class="w-full overflow-hidden">
-            <div class="overflow-x-auto table-view">
-                <div class="inline-block min-w-full align-middle">
+        <div class="">
+            <div class="flex">
+                <div class="inline-block flex-1 min-w-full align-middle table-view">
                     <table class="min-w-full border border-gray-300 text-sm">
                         <thead>
                             <tr class="bg-gray-100">
@@ -229,11 +229,18 @@ th {
 
 .overflow-x-auto {
     overflow-x: auto;
-    max-width: 200%;
+    max-width: 100%;
+}
+
+.table-view {
+    overflow-x: auto;
+    flex: 1;
+    max-width: 100%;
+    /* max-width: max-content; */
 }
 
 table {
-    width: 200%;
+    width: 200vh;
     table-layout: fixed;
 }
 
