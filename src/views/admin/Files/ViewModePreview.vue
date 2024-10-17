@@ -1,6 +1,6 @@
 <template>
   <div v-for="file in fileList" :key="file.id"
-    class="flex flex-col items-center p-2 border rounded cursor-pointer active:opacity-50 relative">
+    class="flex flex-col items-center border rounded cursor-pointer active:opacity-50 relative">
     <!-- Update checkbox for multi-selection -->
     <div class="absolute top-2 right-2 z-10">
       <a-checkbox :model-value="selectedFiles.includes(file.id)"
@@ -8,7 +8,7 @@
     </div>
 
     <div @click="folderClick(file.type, file.full_path, file)"
-      class="w-24 h-32 flex flex-col items-center justify-center">
+      class="w-32 h-18 flex flex-col items-center justify-center">
 
       <IconFilePreview :file="file" />
       <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-1 text-xs">

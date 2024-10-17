@@ -7,6 +7,9 @@
         <NvaButton type="primary" danger :disabled="selectedFiles.length === 0" @click="confirmBatchDelete">
           批量删除 ({{ selectedFiles.length }})
         </NvaButton>
+        <NvaButton type="primary" danger :disabled="selectedFiles.length === 0" @click="handleSetPreviews">
+          批量设置封面({{ selectedFiles.length }})
+        </NvaButton>
       </a-space>
     </template>
   </TitleLine>
@@ -132,7 +135,9 @@
 import { computed, onMounted, reactive, ref, toRefs, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { Message, Modal } from '@arco-design/web-vue'
+import { OSS_URL } from '@/config'
 import { IconPlus, IconCheck, IconClose } from '@arco-design/web-vue/es/icon'
+import { createVideoPreviews } from '@/utils/ffmpeg'
 import { getFileList, createFolder, uploadFile, saveUploadData, deleteFile, setFileAlias } from '@/api/files'
 import { uploadFileToR2 } from '@/utils/aws-r2'
 import BoxView from '@/components/BoxView.vue'
@@ -187,6 +192,44 @@ watch(() => route.query.dir, (newDir) => {
     getFileListData(currentDir.value)
   }
 })
+
+// 批量设置封面
+const handleSetPreviews = async () => {
+  console.log('handleSetPreviews', selectedFiles.value)
+  // 在fileList里查出所有id的path
+  const paths = fileList.value.filter(file => selectedFiles.value.includes(file.id)).map(file => {
+    return {
+      url:  OSS_URL + (file.full_path),
+      name: file.path,
+      id: file.id
+    }
+  })
+  // 上传预览图
+  for (const path of paths) {
+    const previeGifBlob = await createVideoPreviews(path.url)
+    // 将Blob对象转换为File对象
+    const previewGifFile = new File([previeGifBlob], `video_preview_${path.name}.gif`, { type: 'image/gif' })
+    // 上传到R2
+    const res = await uploadFileToR2(
+      previewGifFile,
+      ({ progress, speed }) => {
+        console.log('上传进度:', progress, '上传速度:', speed)
+      },
+      '/video_preview'
+    )
+    await setFileAlias({
+      fileId: path.id,
+      alias: path.name,
+      previewUrl: res.url
+    })
+    // 保存到数据库
+    // await saveUploadData({
+    //   url: res.url,
+    //   fileSize: res.fileSize,
+    //   dir: '/video_preview'
+    // })
+  }
+}
 
 
 const folderClick = async (type, path, file) => {
@@ -294,6 +337,32 @@ const clearUploadingFiles = () => {
   uploadingFiles.value = []
 }
 
+// uploadVideoPreview
+const uploadVideoPreview = async (file) => {
+  if (file.type.startsWith('video/')) {
+    const previeGifBlob = await createVideoPreviews(file)
+    // 将Blob对象转换为File对象
+    const previewGifFile = new File([previeGifBlob], `video_preview_${file.name}.gif`, { type: 'image/gif' })
+    // 上传到R2
+    const res = await uploadFileToR2(
+      previewGifFile,
+      ({ progress, speed }) => {
+        console.log('上传进度:', progress, '上传速度:', speed)
+      },
+      '/video_preview'
+    )
+    // 保存到数据库
+    await saveUploadData({
+      url: res.url,
+      fileSize: res.fileSize,
+      dir: '/video_preview'
+    })
+    return res.url
+  } else {
+    return null
+  }
+}
+
 /**
  * 处理文件上传
  * @param {FileList|File[]} files - 要上传的文件列表
@@ -306,6 +375,7 @@ const handleFileUpload = async (files) => {
     fileArray.forEach(addToUploadQueue)
 
     for (const file of fileArray) {
+      const previewUrl = await uploadVideoPreview(file)
       const uploadingFile = uploadingFiles.value.find(f => f.name === file.name)
       uploadingFile.status = 'Uploading'
 
@@ -318,6 +388,7 @@ const handleFileUpload = async (files) => {
       if (res.url) {
         await saveUploadData({
           url: res.url,
+          previewUrl: previewUrl,
           fileSize: res.fileSize,
           dir: currentDir.value
         })

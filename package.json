@@ -19,6 +19,7 @@
         "@aws-sdk/s3-request-presigner": "^3.669.0",
         "@kangc/v-md-editor": "^2.3.18",
         "axios": "^1.7.7",
+        "gif.js": "git+https://github.com/jnordberg/gif.js.git",
         "mitt": "^3.0.1",
         "prismjs": "^1.29.0",
         "vue": "^3.4.29",

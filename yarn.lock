@@ -1316,6 +1316,29 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ffmpeg/ffmpeg@npm:^0.12.10":
+  version: 0.12.10
+  resolution: "@ffmpeg/ffmpeg@npm:0.12.10"
+  dependencies:
+    "@ffmpeg/types": ^0.12.2
+  checksum: bca753806ce7547406c498773a276c3703df959fbd28ee1c41ba0b82c82e8c761bc738de0af545fcae9f92b8584d2dc1a96d459bf5380df8cf5293fd29e904f2
+  languageName: node
+  linkType: hard
+
+"@ffmpeg/types@npm:^0.12.2":
+  version: 0.12.2
+  resolution: "@ffmpeg/types@npm:0.12.2"
+  checksum: 2a80d42f9afe93db86c636a91f1477a796f628528eebe526673bf450221dc97fa2a773670c0979c52b6b287bd8b94fc508bbddbe40054a44df44aeed80c9c801
+  languageName: node
+  linkType: hard
+
+"@ffmpeg/util@npm:^0.12.1":
+  version: 0.12.1
+  resolution: "@ffmpeg/util@npm:0.12.1"
+  checksum: 6de17789a3cbe912fec2ae1e5c0b710fb68a0a668789311bce8967f8468b0dd64335b96144eea71800fa8729d27468e0d54e4c8ef9c7fc35a99590116d3074f9
+  languageName: node
+  linkType: hard
+
 "@humanwhocodes/config-array@npm:^0.13.0":
   version: 0.13.0
   resolution: "@humanwhocodes/config-array@npm:0.13.0"
@@ -4820,6 +4843,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"gif.js@git+https://github.com/jnordberg/gif.js.git":
+  version: 0.2.0
+  resolution: "gif.js@https://github.com/jnordberg/gif.js.git#commit=92d27a02841339e202c75150dcf6fe5f4fa42ec5"
+  checksum: 0bf58c70864ba5493b378392d04e68a729f2895b3b4eb8a1c697db93b31ff4ba7f9625ccc42259ac3f24af819b6370d44c35f71f162ee885a723b1b02333f420
+  languageName: node
+  linkType: hard
+
 "glob-parent@npm:^3.1.0":
   version: 3.1.0
   resolution: "glob-parent@npm:3.1.0"
@@ -6468,6 +6498,8 @@ __metadata:
     "@aws-sdk/client-s3": ^3.669.0
     "@aws-sdk/lib-storage": ^3.669.0
     "@aws-sdk/s3-request-presigner": ^3.669.0
+    "@ffmpeg/ffmpeg": ^0.12.10
+    "@ffmpeg/util": ^0.12.1
     "@kangc/v-md-editor": ^2.3.18
     "@rushstack/eslint-patch": ^1.8.0
     "@tsconfig/node20": ^20.1.4
@@ -6482,6 +6514,7 @@ __metadata:
     eslint: ^8.57.0
     eslint-plugin-vue: ^9.23.0
     gh-pages: ^6.2.0
+    gif.js: "git+https://github.com/jnordberg/gif.js.git"
     mitt: ^3.0.1
     npm-run-all2: ^6.2.0
     postcss: ^8.4.47
