@@ -180,7 +180,9 @@ const saveChanges = async () => {
     loading.value = true
     try {
         console.log(list.value)
-        await updateTableData(props.tableName, list.value)
+        await updateTableData(props.tableName, {
+            data: list.value
+        })
         refresh()
         hasChanges.value = false
     } catch (error) {

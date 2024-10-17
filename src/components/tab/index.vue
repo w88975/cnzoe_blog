@@ -1,10 +1,11 @@
 <template>
     <div class="flex flex-row items-center relative w-full bg-gray-100 p-2 rounded">
-        <button v-for="(tab, index) in tabs" :key="tab" @click="selectTab(tab, index)" @mouseenter="updateTabBg(index)"
-            @mouseleave="resetTabBg" ref="tabButtons" :class="[
-                'p-1 px-4 font-medium text-sm focus:outline-none z-10',
+        <!-- @mouseenter="updateTabBg(index)"
+            @mouseleave="resetTabBg"  -->
+        <button v-for="(tab, index) in tabs" :key="tab" @click="selectTab(tab, index)" ref="tabButtons" :class="[
+            'p-1 px-4 font-medium text-sm focus:outline-none z-10',
 
-            ]">
+        ]">
             {{ tab }}
         </button>
         <div id="tab-bg" class="absolute z-0 h-8 rounded-lg bg-white shadow-md transition-all duration-300"
