@@ -15,43 +15,41 @@
             <NvaButton @click="saveChanges" :disabled="!hasChanges">保存更改</NvaButton>
         </div>
 
-        <div class="">
-            <div class="flex">
-                <div class="inline-block flex-1 min-w-full align-middle table-view">
-                    <table class="min-w-full border border-gray-300 text-sm">
-                        <thead>
-                            <tr class="bg-gray-100">
-                                <th v-for="column in columns" :key="column"
-                                    class="border border-gray-300 text-xs px-2 py-1">
-                                    {{ column }}
-                                    <div class="resize-handle" @mousedown="startResize($event, column)"></div>
-                                </th>
-                                <th class="border border-gray-300 text-xs px-2 py-1">操作</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(row, rowIndex) in list" :key="row._id" class="hover:bg-gray-50">
-                                <td v-for="column in columns" :key="`${row._id}-${column}`"
-                                    class="border border-gray-300 px-1 py-1">
-                                    <template v-if="column === '_id'">
-                                        {{ row[column] }}
-                                    </template>
-                                    <template v-else>
-                                        <input v-model="row[column]"
-                                            class="border border-gray-300 w-full px-1 py-0.5 text-xs"
-                                            @change="updateRow(row)" />
-                                    </template>
-                                </td>
-                                <td class="border px-1 py-1 text-center">
-                                    <button @click="removeRow(rowIndex)"
-                                        class="text-red-600 hover:text-red-800 text-xs mr-2">删除</button>
-                                    <button @click="saveRow(row)" class="text-blue-600 hover:text-blue-800 text-xs"
-                                        :disabled="!row._changed">保存</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+        <div class="flex">
+            <div class="inline-block flex-1 min-w-full align-middle table-view">
+                <table class="min-w-full border border-gray-300 text-sm">
+                    <thead>
+                        <tr class="bg-gray-100">
+                            <th v-for="column in columns" :key="column"
+                                class="border border-gray-300 text-xs px-2 py-1">
+                                {{ column }}
+                                <div class="resize-handle" @mousedown="startResize($event, column)"></div>
+                            </th>
+                            <th class="border border-gray-300 text-xs px-2 py-1">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(row, rowIndex) in list" :key="row._id" class="hover:bg-gray-50">
+                            <td v-for="column in columns" :key="`${row._id}-${column}`"
+                                class="border border-gray-300 px-1 py-1">
+                                <template v-if="column === '_id'">
+                                    {{ row[column] }}
+                                </template>
+                                <template v-else>
+                                    <input v-model="row[column]"
+                                        class="border border-gray-300 w-full px-1 py-0.5 text-xs"
+                                        @change="updateRow(row)" />
+                                </template>
+                            </td>
+                            <td class="border px-1 py-1 text-center">
+                                <button @click="removeRow(rowIndex)"
+                                    class="text-red-600 hover:text-red-800 text-xs mr-2">删除</button>
+                                <button @click="saveRow(row)" class="text-blue-600 hover:text-blue-800 text-xs"
+                                    :disabled="!row._changed">保存</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
