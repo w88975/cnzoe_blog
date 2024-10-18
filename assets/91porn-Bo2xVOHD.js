@@ -1,1 +1,0 @@
-import{i as o}from"./index-B5UV0Fk5.js";const a=async()=>o.get("/api/91porn/today-hot",{}),r=async t=>o.get("/api/91porn/post-content",{params:{tid:t}}),p=async(t,n)=>o.post("/api/91porn/update-saved-imgs",{tid:t,savedImgs:n}),e=async(t=1,n=20)=>o.post("/api/91porn/get-featured-posts",{page:t,pageSize:n});export{a as $,e as a,r as b,p as c};
