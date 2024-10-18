@@ -47,6 +47,14 @@ const router = createRouter({
 						requiresAuth: true
 					},
 					component: () => import('../views/porn/91PornDetail.vue')
+				},
+				{
+					path: '/app/favorite',
+					name: 'favorite',
+					meta: {
+						requiresAuth: true
+					},
+					component: () => import('../views/porn/favorite.vue')
 				}
 			]
 		},
@@ -56,12 +64,6 @@ const router = createRouter({
 			component: LayoutView,
 
 			children: [
-				// {
-				//   path: '',
-				//   name: 'dashboard',
-				//   // @ts-ignore
-				//   component: () => import('../views/admin/DashBoard.vue')
-				// },
 				{
 					path: 'post-list',
 					name: 'post-list',

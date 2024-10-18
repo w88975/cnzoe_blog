@@ -38,3 +38,7 @@ export const createTable = (tableName) => {
     return instance.post('/api/db/create/table', { tableName })
 }
 
+// 通用search, 支持模糊搜索, 支持分页, 支持排序
+export const commonSearch = (data) => {
+    return instance.post('/api/db/search', { ...data })
+}
