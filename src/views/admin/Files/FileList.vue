@@ -199,8 +199,12 @@ const handleSetPreviews = async () => {
   // 上传预览图
   for (const path of paths) {
     const previeGifBlob = await createVideoPreviews(path.url)
+    if (!previeGifBlob) {
+      continue
+    }
     // 将Blob对象转换为File对象
-    const previewGifFile = new File([previeGifBlob], `video_preview_${path.name}.gif`, { type: 'image/gif' })
+    const timestamp = Date.now()
+    const previewGifFile = new File([previeGifBlob], `video_preview_${path.name}_${timestamp}.gif`, { type: 'image/gif' })
     // 上传到R2
     const res = await uploadFileToR2(
       previewGifFile,
@@ -313,8 +317,12 @@ const clearUploadingFiles = () => {
 const uploadVideoPreview = async (file) => {
   if (file.type.startsWith('video/')) {
     const previeGifBlob = await createVideoPreviews(file)
+    if (!previeGifBlob) {
+      return null
+    }
     // 将Blob对象转换为File对象
-    const previewGifFile = new File([previeGifBlob], `video_preview_${file.name}.gif`, { type: 'image/gif' })
+    const timestamp = Date.now()
+    const previewGifFile = new File([previeGifBlob], `video_preview_${file.name}_${timestamp}.gif`, { type: 'image/gif' })
     // 上传到R2
     const res = await uploadFileToR2(
       previewGifFile,
