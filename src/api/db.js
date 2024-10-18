@@ -33,3 +33,8 @@ export const updateTableData = (tableName, data) => {
     return instance.post(`/api/db/table/update/${tableName}`, { ...data })
 }
 
+// 新建表
+export const createTable = (tableName) => {
+    return instance.post('/api/db/create/table', { tableName })
+}
+

@@ -7,8 +7,7 @@
 </template>
 
 <script setup>
-import { nextTick } from 'process';
-import { ref, onMounted, watch, computed } from 'vue';
+import { ref, onMounted, watch, computed, nextTick } from 'vue';
 
 const props = defineProps({
     speed: {
