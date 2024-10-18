@@ -27,6 +27,7 @@ import TitleLine from '@/components/TitleLine.vue'
 import NvaModal from '@/components/modal/index.vue'
 import NvaInput from '@/components/input/index.vue'
 import NvaButton from '@/components/button/index.vue'
+import NvaTextScroll from '@/components/text-scroll/index.vue'
 import BoxView from '@/components/BoxView.vue'
 import NavTab from '@/components/tab/index.vue'
 import NvaPagination from '@/components/pagination/index.vue'
@@ -47,6 +48,7 @@ app.component('NvaInput', NvaInput)
 app.component('NvaButton', NvaButton)
 app.component('NavTab', NavTab)
 app.component('NvaPagination', NvaPagination)
+app.component('NvaTextScroll', NvaTextScroll)
 app.component('BoxView', BoxView)
 
 app.mount('#app')

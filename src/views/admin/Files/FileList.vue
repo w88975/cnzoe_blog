@@ -43,8 +43,7 @@
       </div>
 
       <!-- 文件夹展示 -->
-      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 auto-rows-auto relative"
-        @dragenter.prevent="handleDragEnter" @dragover.prevent @dragleave.prevent="handleDragLeave"
+      <div class="w-full" @dragenter.prevent="handleDragEnter" @dragover.prevent @dragleave.prevent="handleDragLeave"
         @drop.prevent="handleFileDrop">
 
         <!-- 默认视图 -->
@@ -199,7 +198,7 @@ const handleSetPreviews = async () => {
   // 在fileList里查出所有id的path
   const paths = fileList.value.filter(file => selectedFiles.value.includes(file.id)).map(file => {
     return {
-      url:  OSS_URL + (file.full_path),
+      url: OSS_URL + (file.full_path),
       name: file.path,
       id: file.id
     }
