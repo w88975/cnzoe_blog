@@ -1,5 +1,5 @@
 <template>
-    <div class="footer p-4">Footer</div>
+    <div class="footer p-4">POWERED BY <b>KAMI'SAMA</b></div>
 </template>
 
 <script setup lang="ts">
