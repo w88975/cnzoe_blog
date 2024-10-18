@@ -17,7 +17,8 @@
                             class="border border-gray-300 px-1 py-0.5 text-xs max-w-[200px] truncate"
                             @dblclick="startEditing(rowIndex, column)">
                             <!-- <span v-if="!isEditing(rowIndex, column)">{{ row[column] }}</span> -->
-                            <NvaTextScroll start="hover" v-if="!isEditing(rowIndex, column)">{{ row[column] }}
+                            <NvaTextScroll :key="`text_${row['id']}`" start="hover" v-if="!isEditing(rowIndex, column)">
+                                {{ row[column] }}
                             </NvaTextScroll>
                             <input v-else v-model="row[column]" @blur="finishEditing(rowIndex, column)"
                                 @keyup.enter="finishEditing(rowIndex, column)"

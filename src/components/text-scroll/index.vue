@@ -7,6 +7,7 @@
 </template>
 
 <script setup>
+import { nextTick } from 'process';
 import { ref, onMounted, watch, computed } from 'vue';
 
 const props = defineProps({
@@ -66,7 +67,9 @@ const handleMouseLeave = () => {
 };
 
 onMounted(() => {
-    setTimeout(checkOverflow, 1000);
+    nextTick(() => {
+        setTimeout(checkOverflow, 1000);
+    })
 });
 
 watch(() => contentRef.value?.innerHTML, checkOverflow);
