@@ -29,10 +29,12 @@ import NvaInput from '@/components/input/index.vue'
 import NvaButton from '@/components/button/index.vue'
 import BoxView from '@/components/BoxView.vue'
 import NavTab from '@/components/tab/index.vue'
+import { NvaMessage } from '@/utils/message'
 
 const bus = mitt()
 const app = createApp(App)
 app.config.globalProperties.$bus = bus
+window.NvaMessage = NvaMessage
 
 app.use(router)
 app.use(ArcoVue);

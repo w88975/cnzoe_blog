@@ -8,9 +8,9 @@ export default function useList(api, params = {}) {
     const pageSize = ref(20)
     const result = ref({})
 
-    const getList = (newParams) => {
+    const getList = async (newParams) => {
         loading.value = true
-        api({ page: page.value, pageSize: pageSize.value, ...newParams }).then(res => {
+        await api({ page: page.value, pageSize: pageSize.value, ...newParams }).then(res => {
             list.value = res.data.data.list
             total.value = res.data.data.total
             result.value = res.data.data
@@ -19,9 +19,9 @@ export default function useList(api, params = {}) {
         })
     }
 
-    const refresh = (newParams) => {
+    const refresh = async (newParams) => {
         page.value = 1
-        getList({ ...params, ...newParams })
+        await getList({ ...params, ...newParams })
     }
 
     onMounted(() => {

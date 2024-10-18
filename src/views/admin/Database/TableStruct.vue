@@ -145,6 +145,7 @@ const saveChanges = async () => {
     emits('update:loading', true)
     const res = await modifyTableStructure(selectedTable.value, tableStructure.value)
     await handleGetTableStructure(selectedTable.value)
+    NvaMessage.success('保存成功')
     // loading
     emits('update:loading', false)
 }

@@ -165,8 +165,10 @@ const saveRow = async (row) => {
         })
         row._changed = false
         hasChanges.value = list.value.some(r => r._changed)
+        NvaMessage.success('保存成功')
     } catch (error) {
         console.error('Error saving row:', error)
+        NvaMessage.error('保存失败')
     } finally {
         loading.value = false
     }
@@ -201,8 +203,10 @@ const saveChanges = async () => {
         refresh()
         changedList.value = []
         hasChanges.value = false
+        NvaMessage.success('保存成功')
     } catch (error) {
         console.error('Error saving changes:', error)
+        NvaMessage.error('保存失败')
     } finally {
         loading.value = false
     }
@@ -214,9 +218,10 @@ const handleListUpdate = (newList) => {
 }
 
 // 运行SQL
-const runSqlQuery = () => {
+const runSqlQuery = async () => {
     console.log('sqlStr', sqlStr.value)
-    refresh({ page: 1, pageSize: pageSize.value, tableName: props.tableName, sql: sqlStr.value })
+    await refresh({ page: 1, pageSize: pageSize.value, tableName: props.tableName, sql: sqlStr.value })
+    NvaMessage.success('查询成功')
 }
 
 watch(() => props.tableName, (newTableName) => {
