@@ -1,18 +1,23 @@
 <template>
-    <div ref="containerRef" class="text-scroll-container">
-        <div ref="contentRef" class="text-scroll-content" :style="animationStyle">
+    <div ref="containerRef" class="text-scroll-container" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave">
+        <div ref="contentRef" class="text-scroll-content" :style="computedAnimationStyle">
             <slot></slot>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
 
 const props = defineProps({
     speed: {
         type: Number,
         default: 20
+    },
+    start: {
+        type: String,
+        default: 'auto',
+        validator: (value) => ['auto', 'hover'].includes(value)
     }
 });
 
@@ -20,19 +25,18 @@ const containerRef = ref(null);
 const contentRef = ref(null);
 const isOverflowing = ref(false);
 const animationStyle = ref({});
+const isHovered = ref(false);
 
 const checkOverflow = () => {
     if (containerRef.value && contentRef.value) {
         isOverflowing.value = contentRef.value.offsetWidth > containerRef.value.offsetWidth;
 
         if (isOverflowing.value) {
-            // const containerWidth = containerRef.value.offsetWidth;
             const contentWidth = contentRef.value.offsetWidth;
             const animationDuration = contentWidth / props.speed;
             animationStyle.value = {
                 animation: `text-scroll ${animationDuration}s linear infinite`,
                 animationDelay: '1s',
-                // paddingLeft: `0px`, // 添加左侧填充
             };
         } else {
             animationStyle.value = {};
@@ -40,7 +44,31 @@ const checkOverflow = () => {
     }
 };
 
-onMounted(checkOverflow);
+const computedAnimationStyle = computed(() => {
+    if (props.start === 'hover' && !isHovered.value) {
+        return {};
+    }
+    if (props.start === 'hover') {
+        return {
+            ...animationStyle.value,
+            animationDelay: '0s'
+        };
+    }
+    return animationStyle.value;
+});
+
+const handleMouseEnter = () => {
+    isHovered.value = true;
+};
+
+const handleMouseLeave = () => {
+    isHovered.value = false;
+};
+
+onMounted(() => {
+    setTimeout(checkOverflow, 1000);
+});
+
 watch(() => contentRef.value?.innerHTML, checkOverflow);
 </script>
 

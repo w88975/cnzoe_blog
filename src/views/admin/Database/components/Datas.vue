@@ -16,7 +16,9 @@
                         <td v-for="column in columns" :key="`${rowIndex}-${column}`"
                             class="border border-gray-300 px-1 py-0.5 text-xs max-w-[200px] truncate"
                             @dblclick="startEditing(rowIndex, column)">
-                            <span v-if="!isEditing(rowIndex, column)">{{ row[column] }}</span>
+                            <!-- <span v-if="!isEditing(rowIndex, column)">{{ row[column] }}</span> -->
+                            <NvaTextScroll start="hover" v-if="!isEditing(rowIndex, column)">{{ row[column] }}
+                            </NvaTextScroll>
                             <input v-else v-model="row[column]" @blur="finishEditing(rowIndex, column)"
                                 @keyup.enter="finishEditing(rowIndex, column)"
                                 class="w-full px-1 py-0.5 text-xs border-none focus:outline-none focus:ring-1 focus:ring-blue-500"
