@@ -50,6 +50,7 @@ const editingRow = ref(null)
 const editingColumn = ref(null)
 const updatedColumns = ref([])
 const tableContainer = ref(null)
+
 const isEditing = (rowIndex, column) => {
     return editingRow.value === rowIndex && editingColumn.value === column
 }
@@ -107,7 +108,6 @@ const startResize = (event, column) => {
 const updateTableHeight = () => {
     const tableContainer = document.querySelector('#table-container')
     const tableWrapper = document.querySelector('#table-wrapper')
-    console.log('xxxxxxxxxxxxxxxx', tableContainer.clientHeight)
     tableWrapper.style.height = tableContainer.clientHeight + 'px'
 }
 
@@ -120,7 +120,6 @@ watch(props.list, () => {
 onMounted(() => {
     // 监听tableContainer内容变化
     const observer = new MutationObserver((mutations) => {
-        console.log('监听tableContainer内容变化')
         updateTableHeight()
     })
 

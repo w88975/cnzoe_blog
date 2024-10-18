@@ -29,6 +29,7 @@ import NvaInput from '@/components/input/index.vue'
 import NvaButton from '@/components/button/index.vue'
 import BoxView from '@/components/BoxView.vue'
 import NavTab from '@/components/tab/index.vue'
+import NvaPagination from '@/components/pagination/index.vue'
 import { NvaMessage } from '@/utils/message'
 
 const bus = mitt()
@@ -39,10 +40,13 @@ window.NvaMessage = NvaMessage
 app.use(router)
 app.use(ArcoVue);
 app.use(VueMarkdownEditor)
+
 app.component('TitleLine', TitleLine)
 app.component('NvaModal', NvaModal)
 app.component('NvaInput', NvaInput)
 app.component('NvaButton', NvaButton)
 app.component('NavTab', NavTab)
+app.component('NvaPagination', NvaPagination)
 app.component('BoxView', BoxView)
+
 app.mount('#app')

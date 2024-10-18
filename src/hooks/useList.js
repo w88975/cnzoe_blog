@@ -9,6 +9,12 @@ export default function useList(api, params = {}) {
     const result = ref({})
 
     const getList = async (newParams) => {
+        if (newParams.page) {
+            page.value = newParams.page
+        }
+        if (newParams.pageSize) {
+            pageSize.value = newParams.pageSize
+        }
         loading.value = true
         await api({ page: page.value, pageSize: pageSize.value, ...newParams }).then(res => {
             list.value = res.data.data.list
@@ -34,5 +40,7 @@ export default function useList(api, params = {}) {
         refresh,
         total,
         result,
+        page,
+        pageSize,
     }
 }
