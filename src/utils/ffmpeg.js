@@ -20,6 +20,8 @@ async function createVideoPreviews(videoInput) {
     const video = document.createElement('video')
     video.src = videoUrl
     video.crossOrigin = 'anonymous' // 如果视频来自不同域
+    video.muted = true // 静音视频以避免自动播放限制
+    video.playsInline = true // 内联播放，避免全屏
 
     // 等待视频加载元数据
     await new Promise((resolve, reject) => {
@@ -45,7 +47,16 @@ async function createVideoPreviews(videoInput) {
 
       // 等待视频seek完成
       await new Promise(resolve => {
-        video.onseeked = resolve
+        const seekHandler = () => {
+          video.removeEventListener('seeked', seekHandler)
+          resolve()
+        }
+        video.addEventListener('seeked', seekHandler)
+        // 添加超时处理
+        setTimeout(() => {
+          video.removeEventListener('seeked', seekHandler)
+          resolve()
+        }, 1000) // 1秒超时
       })
 
       // 在canvas上绘制黑色背景
