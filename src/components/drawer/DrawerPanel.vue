@@ -1,6 +1,6 @@
 <template>
-    <a-drawer :header="false" :width="500" :placement="direction" :visible="isOpen" unmountOnClose
-        @cancel="closeDrawer">
+    <a-drawer :header="false" :width="500" :height="'auto'" :placement="direction" :visible="isOpen" unmountOnClose
+        @cancel="closeDrawer" :drawer-style="{ maxHeight: '100vh' }">
         <slot></slot>
     </a-drawer>
 </template>

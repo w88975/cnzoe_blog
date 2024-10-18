@@ -5,10 +5,16 @@
             <!-- 点击打开链接 -->
             <a :href="`${OSS_URL}${file.full_path}`" target="_blank" class="block">
                 <p class="mb-1"><strong>Name:</strong></p>
-                <span class="text-blue-500 hover:text-blue-700 underline">{{ OSS_URL + file.full_path }}</span>
+                <div class="break-all underline text-blue-500 hover:text-blue-700">
+                    {{ OSS_URL + file.full_path }}
+                </div>
             </a>
+            <!-- 当文件是图片的时候, 显示预览图 -->
+            <div v-if="isPreview">
+                <img :src="OSS_URL + (file.preview || file.full_path)" alt="file preview" class="w-full h-auto" />
+            </div>
             <p><strong>Type:</strong> {{ file.type === 0 ? 'Folder' : 'File' }}</p>
-            <p><strong>Full Path:</strong> {{ file.full_path }}</p>
+            <p class="break-all"><strong>Full Path:</strong> {{ file.full_path }}</p>
             <p><strong>Size:</strong> {{ formatFileSize(file.file_size) }}</p>
             <p><strong>File Type:</strong> {{ file.file_type }}</p>
             <p><strong>Created At:</strong> {{ formatDate(file.created_at) }}</p>
@@ -39,7 +45,7 @@
 </template>
 
 <script setup lang="js">
-import { defineProps, ref, defineEmits } from 'vue'
+import { defineProps, ref, defineEmits, computed } from 'vue'
 import { OSS_URL } from '@/config'
 import { deleteFile, setFileAlias } from '@/api/files'
 import { Message } from '@arco-design/web-vue'
@@ -56,6 +62,53 @@ const emit = defineEmits(['fileDeleted', 'aliasUpdated'])
 const deleteLoading = ref(false)
 const alias = ref(props.file.alias || props.file.path)
 const aliasSaving = ref(false)
+
+const getFileExtension = (fileName) => {
+    return fileName.split('.').pop().toLowerCase()
+}
+
+const getFileType = (fileName) => {
+    const extension = getFileExtension(fileName)
+    switch (extension) {
+        case 'pdf':
+        case 'doc':
+        case 'docx':
+        case 'txt':
+            return 'document'
+        case 'jpg':
+        case 'jpeg':
+        case 'png':
+        case 'gif':
+        case 'svg':
+            return 'image'
+        case 'mp4':
+        case 'avi':
+        case 'mov':
+            return 'video'
+        case 'mp3':
+        case 'wav':
+            return 'audio'
+        case 'zip':
+        case 'rar':
+        case '7z':
+        case 'tar':
+        case 'gz':
+        case 'bz2':
+        case 'xz':
+            return 'zip'
+        case 'js':
+        case 'vue':
+        case 'py':
+        case 'java':
+            return 'code'
+        default:
+            return 'unknown'
+    }
+}
+
+const isPreview = computed(() => {
+    return (getFileType(props.file.file_name) === 'image') || (getFileType(props.file.file_name) === 'video')
+})
 
 const handleDeleteFile = async (done) => {
     deleteLoading.value = true

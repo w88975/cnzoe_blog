@@ -13,7 +13,7 @@
         <RouterLink to="/admin/file-list" class="h-full">
           <div class="bg-gray-100 p-4 rounded-md cursor-pointer flex flex-row items-center h-full">
             <icon-image size="24" class="mr-2 flex-shrink-0" />
-            <span class="flex-grow">Image Manager</span>
+            <span class="flex-grow">File Manager</span>
           </div>
         </RouterLink>
 

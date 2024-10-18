@@ -4,7 +4,7 @@
             <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" @click="handleCancel"></div>
 
             <Transition name="modal-content">
-                <div class="relative z-10 w-full max-w-lg p-6 mx-auto bg-white shadow-xl sm:max-w-xl">
+                <div class="relative z-10 w-full max-w-lg p-6 mx-auto bg-white shadow-xl sm:max-w-xl overflow-y-auto" style="max-height: 80vh;">
                     <div class="absolute top-0 right-0 pt-4 pr-4">
                         <button @click="handleCancel"
                             class="text-gray-400 hover:text-gray-500 focus:outline-none focus:text-gray-500">
@@ -29,12 +29,10 @@
 
                     <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
                         <slot name="footer">
-                            <NvaButton @click.once="ok"
-                                class="w-full mb-4 sm:ml-3 sm:w-auto sm:text-sm">
+                            <NvaButton @click.once="ok" class="w-full mb-4 sm:ml-3 sm:w-auto sm:text-sm">
                                 确定
                             </NvaButton>
-                            <NvaButton @click.once="handleCancel" class="w-full mb-4 sm:ml-3 sm:w-auto sm:text-sm"
-                                >
+                            <NvaButton @click.once="handleCancel" class="w-full mb-4 sm:ml-3 sm:w-auto sm:text-sm">
                                 取消
                             </NvaButton>
                         </slot>
