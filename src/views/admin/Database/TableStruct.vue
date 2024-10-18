@@ -18,7 +18,7 @@
                                 类型</th>
                             <th
                                 class="border border-gray-300 px-1 py-0.5 text-xs font-normal text-left max-w-[200px] truncate relative">
-                                是否可空</th>
+                                不许为空</th>
                             <th
                                 class="border border-gray-300 px-1 py-0.5 text-xs font-normal text-left max-w-[200px] truncate relative">
                                 默认值</th>

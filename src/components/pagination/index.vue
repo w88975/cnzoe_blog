@@ -1,7 +1,7 @@
 <template>
     <div class="flex items-center justify-between mt-4">
         <div class="text-sm text-gray-700">
-            总共 <span class="font-medium">{{ pagination.total }}</span> 条
+            共计: <span class="font-medium">{{ pagination.total }}</span>
         </div>
         <div class="flex items-center space-x-2">
             <button @click="handlePrevPage" :disabled="pagination.page === 1"

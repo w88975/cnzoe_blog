@@ -7,6 +7,7 @@ export default function useList(api, params = {}) {
     const page = ref(1)
     const pageSize = ref(20)
     const result = ref({})
+    const defaultParams = ref(params)
 
     const getList = async (newParams) => {
         if (newParams.page) {
@@ -27,7 +28,12 @@ export default function useList(api, params = {}) {
 
     const refresh = async (newParams) => {
         page.value = 1
-        await getList({ ...params, ...newParams })
+        defaultParams.value = { ...defaultParams.value, ...newParams }
+        await getList({ ...defaultParams.value })
+    }
+
+    const setParams = (newParams) => {
+        defaultParams.value = { ...defaultParams.value, ...newParams }
     }
 
     onMounted(() => {
@@ -42,5 +48,6 @@ export default function useList(api, params = {}) {
         result,
         page,
         pageSize,
+        setParams,
     }
 }

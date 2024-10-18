@@ -2,10 +2,8 @@ import instance from './index'
 
 // 获取文件夹列表
 export const getFileList = (params) => {
-    return instance.get('/api/files/list', {
-        params: {
-            ...params
-        }
+    return instance.post('/api/files/list', {
+      ...params
     })
 }
 
