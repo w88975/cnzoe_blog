@@ -5,13 +5,15 @@ export default function useList(api, params = {}) {
     const loading = ref(false)
     const total = ref(0)
     const page = ref(1)
-    const pageSize = ref(10)
+    const pageSize = ref(20)
+    const result = ref({})
 
     const getList = (newParams) => {
         loading.value = true
         api({ page: page.value, pageSize: pageSize.value, ...newParams }).then(res => {
             list.value = res.data.data.list
             total.value = res.data.data.total
+            result.value = res.data.data
         }).finally(() => {
             loading.value = false
         })
@@ -30,6 +32,7 @@ export default function useList(api, params = {}) {
         list,
         loading,
         refresh,
-        total
+        total,
+        result,
     }
 }

@@ -1,6 +1,13 @@
 <template>
     <!-- 表数据 -->
     <div class="w-full">
+        <div class="mb-4">
+            <textarea v-model="sqlStr" :default-value="sqlStr" placeholder="输入 SQL 查询..."
+                class="w-full h-24 p-2 border border-gray-300 rounded-md text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+            <div class="mt-2 flex justify-end">
+                <NvaButton @click="runSqlQuery">运行</NvaButton>
+            </div>
+        </div>
         <div class="flex flex-row justify-between mb-2">
             <div>
                 <span class="mr-2">每页显示:</span>
@@ -15,7 +22,10 @@
             <NvaButton @click="saveChanges" :disabled="!hasChanges">保存更改</NvaButton>
         </div>
 
-        <div class="flex">
+        <div v-if="false" class="flex">
+
+        </div>
+        <Datas>
             <div class="inline-block flex-1 min-w-full align-middle table-view">
                 <table class="min-w-full border border-gray-300 text-sm">
                     <thead>
@@ -51,7 +61,8 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        </Datas>
+
 
 
         <div class="flex justify-between items-center mt-4">
@@ -77,6 +88,7 @@
 import { ref, computed, watch, defineEmits } from 'vue'
 import { getTableData, updateTableData } from '@/api/db'
 import useList from '@/hooks/useList'
+import Datas from './components/Datas.vue'
 
 const props = defineProps({
     tableName: {
@@ -95,8 +107,13 @@ const columns = ref([])
 const hasChanges = ref(false)
 const currentPage = ref(1)
 const pageSize = ref(20)
+const sqlStr = ref('')
 
-const { list, loading, refresh, total } = useList(getTableData, { tableName: props.tableName })
+const { list, loading, refresh, total, result } = useList(getTableData, { tableName: props.tableName })
+
+watch(result, (newResult) => {
+    sqlStr.value = newResult.sql
+})
 
 const totalPages = computed(() => Math.ceil(total.value / pageSize.value))
 
@@ -188,6 +205,12 @@ const saveChanges = async () => {
     } finally {
         loading.value = false
     }
+}
+
+// 运行SQL
+const runSqlQuery = () => {
+    console.log('sqlStr', sqlStr.value)
+    refresh({ page: 1, pageSize: pageSize.value, tableName: props.tableName, sql: sqlStr.value })
 }
 
 watch(() => props.tableName, (newTableName) => {
