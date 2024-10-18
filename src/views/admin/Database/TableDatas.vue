@@ -19,13 +19,13 @@
                     <option :value="100">100</option>
                 </select>
             </div>
-            <NvaButton @click="saveChanges" :disabled="!hasChanges">保存更改</NvaButton>
+            <NvaButton @click="saveChanges" :disabled="!changedList.length">保存更改</NvaButton>
         </div>
 
         <div v-if="false" class="flex">
 
         </div>
-        <Datas>
+        <Datas :columns="columns" :list="list" @update:list="handleListUpdate">
             <div class="inline-block flex-1 min-w-full align-middle table-view">
                 <table class="min-w-full border border-gray-300 text-sm">
                     <thead>
@@ -62,8 +62,6 @@
                 </table>
             </div>
         </Datas>
-
-
 
         <div class="flex justify-between items-center mt-4">
             <span class="text-sm">总记录数: {{ total }}</span>
@@ -108,6 +106,8 @@ const hasChanges = ref(false)
 const currentPage = ref(1)
 const pageSize = ref(20)
 const sqlStr = ref('')
+
+const changedList = ref([])
 
 const { list, loading, refresh, total, result } = useList(getTableData, { tableName: props.tableName })
 
@@ -196,15 +196,21 @@ const saveChanges = async () => {
     try {
         console.log(list.value)
         await updateTableData(props.tableName, {
-            data: list.value
+            data: changedList.value
         })
         refresh()
+        changedList.value = []
         hasChanges.value = false
     } catch (error) {
         console.error('Error saving changes:', error)
     } finally {
         loading.value = false
     }
+}
+
+const handleListUpdate = (newList) => {
+    changedList.value = newList
+    console.log('newList', newList)
 }
 
 // 运行SQL
@@ -221,6 +227,7 @@ watch(() => props.tableName, (newTableName) => {
 watch(list, (newList) => {
     if (newList.length > 0) {
         columns.value = Object.keys(newList[0]).filter(key => key !== '_id')
+        console.log('columns', columns.value)
     }
 }, { immediate: true })
 
