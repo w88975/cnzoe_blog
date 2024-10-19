@@ -64,7 +64,7 @@ const inputPage = ref(1)
 
 
 const handlePageSizeChange = () => {
-    refresh({ page: 1, pageSize: pageSize.value, tableName: props.tableName })
+    refresh({ page: 1, pageSize: pageSize.value, tableName: props.tableName }, true)
 }
 
 const saveChanges = async () => {
@@ -94,13 +94,13 @@ const handleListUpdate = (newList) => {
 // 运行SQL
 const runSqlQuery = async () => {
     console.log('sqlStr', sqlStr.value)
-    await refresh({ page: 1, pageSize: pageSize.value, tableName: props.tableName, sql: sqlStr.value })
+    await refresh({ page: 1, pageSize: pageSize.value, tableName: props.tableName, sql: sqlStr.value }, true)
     NvaMessage.success('查询成功')
 }
 
 watch(() => props.tableName, (newTableName) => {
     console.log('newTableName', { tableName: newTableName, page: 1, pageSize: pageSize.value })
-    refresh({ tableName: newTableName, page: 1, pageSize: pageSize.value })
+    refresh({ tableName: newTableName, page: 1, pageSize: pageSize.value }, true)
 })
 
 watch(list, (newList) => {
