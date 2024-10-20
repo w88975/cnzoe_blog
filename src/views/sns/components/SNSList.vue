@@ -1,35 +1,41 @@
 <template>
     <!-- Posts list -->
-    <TransitionGroup name="post-list" tag="div" class="space-y-6 mb-4" v-if="posts.length > 0">
-        <div v-for="post in posts" :key="post.id" class="post-item">
+    <TransitionGroup name="post-list" tag="div" class="space-y-6 mb-4" v-if="postMedias.length > 0">
+        <div v-for="post in postMedias" :key="post.id" class="post-item">
             <div class="bg-white rounded-lg shadow overflow-hidden relative">
                 <!-- Add delete button -->
                 <button @click="handleDelete(post.id)" class="absolute top-2 right-2 text-gray-500 hover:text-red-500">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        <path fill-rule="evenodd"
+                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                            clip-rule="evenodd" />
                     </svg>
                 </button>
                 <div class="p-4">
                     <p class="text-gray-800 text-base mb-4 whitespace-pre-line leading-relaxed font-sans">
                         {{ post.text }}
                     </p>
-                    <div v-if="post.images" class="grid grid-cols-3 gap-2 mb-4">
-                        <template v-for="(image, index) in post.images.split(',').slice(0, 9)" :key="index">
-                            <div v-if="index < 8 || post.images.split(',').length <= 9" class="aspect-w-1 aspect-h-1">
-                                <img :src="image" :alt="`Post image ${index + 1}`"
+                    <div v-if="post.medias.length > 0" class="grid grid-cols-3 gap-2 mb-4">
+                        <template v-for="(media, index) in post.medias.slice(0, 9)" :key="index">
+                            <div v-if="index < 8 || post.medias.length <= 9" class="aspect-w-1 aspect-h-1">
+                                <img v-if="media.type === 'image'" :src="getImageResize(media.url)" :alt="`Post image ${index + 1}`"
                                     class="w-full h-full object-cover rounded">
+                                <video v-else-if="media.type === 'video'" :src="media.url" class="w-full h-full object-cover rounded"
+                                    controls></video>
                             </div>
                             <div v-else class="aspect-w-1 aspect-h-1 relative">
-                                <img :src="image" :alt="`Post image ${index + 1}`"
+                                <img v-if="media.type === 'image'" :src="getImageResize(media.url)" :alt="`Post image ${index + 1}`"
                                     class="w-full h-full object-cover rounded">
-                                <div
-                                    class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded">
-                                    <span class="text-white text-xl font-bold">+{{ post.images.split(',').length - 8
-                                        }}</span>
+                                <video v-else-if="media.type === 'video'" :src="media.url" class="w-full h-full object-cover rounded"
+                                    ></video>
+                                <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded">
+                                    <span class="text-white text-xl font-bold">+{{ post.medias.length - 8 }}</span>
                                 </div>
                             </div>
                         </template>
                     </div>
+                    <!-- video -->
+
                     <div class="flex items-center justify-between text-sm text-gray-500">
                         <span>{{ new Date(post.create_at).toLocaleString() }}</span>
                         <div class="flex items-center space-x-2" v-if="post.tags">
@@ -82,7 +88,8 @@
 </template>
 
 <script setup lang="js">
-import { watch } from 'vue'
+import { watch, computed } from 'vue'
+import { OSS_URL, OSS_IMAGE_RESIZE } from '@/config'
 
 const props = defineProps({
     posts: {
@@ -100,6 +107,21 @@ watch(() => props.posts, (newPosts, oldPosts) => {
         console.log('New post(s) added')
     }
 }, { deep: true })
+
+const postMedias = computed(() => {
+    return props.posts.map(post => {
+        const images = post.images.split(',').map(url => ({ type: 'image', url }));
+        const videos = post.videos.split(',').map(url => ({ type: 'video', url }));
+        return {
+            ...post,
+            medias: [...images, ...videos].filter(media => media.url.trim() !== '')
+        };
+    });
+});
+
+const getImageResize = (url) => {
+    return url.replace(OSS_URL, OSS_IMAGE_RESIZE)
+}
 
 // Handle delete button click
 const handleDelete = (postId) => {

@@ -73,6 +73,14 @@ const router = createRouter({
 
             children: [
                 {
+                    path: '',
+                    name: 'dashboard',
+                    meta: {
+                        requiresAuth: true
+                    },
+                    component: () => import('../views/HomeView.vue')
+                },
+                {
                     path: 'post-list',
                     name: 'post-list',
                     meta: {
