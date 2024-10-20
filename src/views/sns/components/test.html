@@ -1,0 +1,52 @@
+<div id="editor" contenteditable="true"></div>
+
+<script>
+const editor = document.getElementById('editor');
+
+editor.addEventListener('input', function() {
+    const selection = window.getSelection();
+    const range = selection.getRangeAt(0);
+    const startOffset = range.startOffset;
+    
+    const content = this.innerHTML;
+    console.log('content', content)
+    const updatedContent = content.replace(/(#\w+\s)/g, '<span class="tag">$1</span>');
+    
+    if (content !== updatedContent) {
+        this.innerHTML = updatedContent;
+        
+        // 恢复光标位置
+        const newRange = document.createRange();
+        newRange.setStart(this.childNodes[0], startOffset);
+        newRange.collapse(true);
+        selection.removeAllRanges();
+        selection.addRange(newRange);
+    }
+});
+
+// 支持删除操作
+editor.addEventListener('keydown', function(e) {
+    if (e.key === 'Backspace') {
+        const selection = window.getSelection();
+        const range = selection.getRangeAt(0);
+        
+        if (range.startContainer.nodeType === Node.TEXT_NODE && range.startOffset === 0) {
+            const previousSibling = range.startContainer.previousSibling;
+            if (previousSibling && previousSibling.nodeType === Node.ELEMENT_NODE && previousSibling.classList.contains('tag')) {
+                e.preventDefault();
+                previousSibling.remove();
+            }
+        }
+    }
+});
+</script>
+
+<style>
+.tag {
+    background-color: #e0e0e0;
+    border-radius: 3px;
+    padding: 2px 4px;
+    margin: 0 2px;
+}
+</style>
+

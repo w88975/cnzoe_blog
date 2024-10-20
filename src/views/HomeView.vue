@@ -1,6 +1,6 @@
 <template>
-  <DashBoard />
-  <ArticleList />
+    <DashBoard />
+    <ArticleList />
 </template>
 <script setup lang="ts">
 import BoxView from '@/components/BoxView.vue'

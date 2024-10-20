@@ -1,5 +1,5 @@
 <template>
-    <a-drawer :header="false" :width="500" :height="'auto'" :placement="direction" :visible="isOpen" unmountOnClose
+    <a-drawer :header="false" :okText="okText" :width="500" :height="'auto'" :placement="direction" :visible="isOpen" unmountOnClose
         @cancel="closeDrawer" :drawer-style="{ maxHeight: '100vh' }">
         <slot></slot>
     </a-drawer>
@@ -14,6 +14,10 @@ const props = defineProps({
     visible: {
         type: Boolean,
         default: false
+    },
+    okText: {
+        type: String,
+        default: '确定'
     }
 })
 const isOpen = ref(props.visible)

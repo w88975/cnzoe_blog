@@ -31,6 +31,7 @@ import NvaTextScroll from '@/components/text-scroll/index.vue'
 import BoxView from '@/components/BoxView.vue'
 import NvaTab from '@/components/tab/index.vue'
 import NvaPagination from '@/components/pagination/index.vue'
+import NvaDrawer from '@/components/drawer/DrawerPanel.vue'
 import { NvaMessage } from '@/utils/message'
 
 const bus = mitt()
@@ -49,6 +50,7 @@ app.component('NvaButton', NvaButton)
 app.component('NvaTab', NvaTab)
 app.component('NvaPagination', NvaPagination)
 app.component('NvaTextScroll', NvaTextScroll)
+app.component('NvaDrawer', NvaDrawer)
 app.component('BoxView', BoxView)
 
 app.mount('#app')

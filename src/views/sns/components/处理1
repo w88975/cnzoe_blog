@@ -1,0 +1,101 @@
+const parseTextToTags = (inputText) => {
+    const result = []
+    const trimmedText = inputText.trim().replace(/\n{3,}/g, '\n\n')  // Limit consecutive newlines to max 2
+    const lines = trimmedText.split('\n')
+
+    lines.forEach((line, lineIndex) => {
+        if (line.trim() === '') {
+            if (lineIndex > 0) {
+                result.push({ type: 'br', text: '\n\n' })
+            }
+        } else {
+            const words = line.split(/(\s+)/)
+            let isStartOfLine = true
+            let currentTextNode = { type: 'text', text: '' }
+
+            words.forEach((word, index) => {
+                if (word.trim() === '') {
+                    currentTextNode.text += word
+                    return
+                }
+
+                if (word.startsWith('#') && word.length > 1) {
+                    const isTag = isStartOfLine ||
+                        (index > 0 && words[index - 1].trim() === '') &&
+                        index < words.length - 1 // 确保不是行尾
+
+                    if (isTag) {
+                        if (currentTextNode.text) {
+                            result.push(currentTextNode)
+                            currentTextNode = { type: 'text', text: '' }
+                        }
+                        result.push({ type: 'tag', text: word.trim() })
+                        if (word.endsWith(' ')) {
+                            currentTextNode.text += ' '
+                        }
+                    } else {
+                        currentTextNode.text += word
+                    }
+                } else {
+                    currentTextNode.text += word
+                }
+
+                isStartOfLine = false
+            })
+
+            if (currentTextNode.text) {
+                result.push(currentTextNode)
+            }
+
+            if (lineIndex < lines.length - 1) {
+                result.push({ type: 'br', text: '\n' })
+            }
+        }
+    })
+
+    // Handle trailing newlines
+    if (inputText.endsWith('\n')) {
+        result.push({ type: 'br', text: '\n' })
+    }
+    if (inputText.endsWith('\n\n')) {
+        result.push({ type: 'br', text: '\n' })
+    }
+
+    return result
+}
+
+修复这个函数换行逻辑, 以下是预期值
+
+输入: '\n'
+预期: []
+解释: '行首换行符, 需要两个\n才算一个换行, 所以单独的\n不算换行'
+
+输入: '\n\n'
+预期: [{type: 'br', text: '\n\n'}]
+解释: '行首换行符, 需要两个\n才算一个换行'
+
+输入: '\n\n\n\n'
+预期: [{type: 'br', text: '\n\n'},{type: 'br', text: '\n\n'}]
+解释: '行首换行符, 需要两个\n才算一个换行, 所以连续的\n\n算两个换行'
+
+输入: '\n\n\n\n\n'
+预期: [{type: 'br', text: '\n\n'},{type: 'br', text: '\n\n'}]
+解释: '行首换行符, 需要两个\n才算一个换行, 计算方式为两两一组, 多一个\n不算换行'
+
+输入: '\n\n\n1'
+预期: [{type: 'br', text: '\n\n'},{type: 'text', text: '1'}]
+解释: '行首换行符, 需要两个\n才算一个换行, 计算方式为两两一组, 多一个\n不算换行'
+
+输入: '\n\n\n1\n\n'
+预期: [{type: 'br', text: '\n\n'},{type: 'text', text: '1'},{type: 'br', text: '\n\n'}]
+解释: '行尾换行符的逻辑跟行首一样'
+
+输入: '\n\n111\n2'
+预期: [{type: 'br', text: '\n\n'},{type: 'text', text: '111'},{type: 'br', text: '\n\n'},{type: 'text', text: '2'}]
+解释: '文本中间的换行符, 只需要一个\n'
+
+输入: '\n\n111\n2\n'
+预期: [{type: 'br', text: '\n\n'},{type: 'text', text: '111'},{type: 'br', text: '\n\n'},{type: 'text', text: '2'}]
+解释: '行尾换行符的逻辑跟行首一样, 单独一个不算'
+
+请修复这个函数, 使其符合预期值
