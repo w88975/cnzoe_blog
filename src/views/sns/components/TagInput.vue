@@ -55,6 +55,20 @@ const filteredTags = computed(() => {
     )
 })
 
+const extractTags = (text) => {
+    const tags = []
+    // Match tags at the beginning of a line or after a space
+    const tagRegex = /(^|\s)#(\S{2,})(?=\s|$)/g
+    let match
+
+    while ((match = tagRegex.exec(text)) !== null) {
+        tags.push(match[2])
+    }
+
+    return tags
+}
+
+
 const handleInput = async () => {
     const cursorPosition = inputRef.value.selectionStart
     const textBeforeCursor = inputText.value.slice(0, cursorPosition)
@@ -116,8 +130,24 @@ const insertText = (text) => {
     const cursorPosition = inputRef.value.selectionStart
 }
 
+const exportData = () => {
+    const text = inputText.value
+    const tags = extractTags(text)
+    return {
+        text,
+        tags
+    }
+}
+
+const clear = () => {
+    inputText.value = ''
+    showTagSelector.value = false
+    tagSuggestions.value = []
+    selectedTagIndex.value = 0
+}
+
 defineExpose({
-    insertText
+    insertText, exportData, clear
 })
 
 watch(filteredTags, (newTags) => {

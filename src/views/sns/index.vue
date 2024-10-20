@@ -1,7 +1,19 @@
 <template>
     <div class="max-w-2xl mx-auto ">
         <!-- Post creation section -->
-        <div class="bg-white rounded-lg shadow mb-6">
+        <div class="bg-white rounded-lg shadow mb-6 relative overflow-hidden" id="post-creation">
+            <!-- Gray overlay -->
+            <div v-if="isPosting"
+                class="absolute inset-0 bg-gray-200 bg-opacity-50 z-10 flex items-center justify-center">
+                <svg class="animate-spin h-10 w-10 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                    </path>
+                </svg>
+            </div>
+
             <div class="p-4">
                 <div class="relative">
                     <TagInput v-model="postValue" ref="tagInputRef" />
@@ -33,18 +45,30 @@
                         </button>
                         <EmojiPicker @select="insertEmoji" />
                     </div>
-                    <button
-                        class="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                        Post
+                    <button @click="handlePost" :disabled="isPosting"
+                        class="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center">
+                        <span v-if="!isPosting">Post</span>
+                        <span v-else class="flex items-center">
+                            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg"
+                                fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                    stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                </path>
+                            </svg>
+                            Posting...
+                        </span>
                     </button>
                 </div>
 
                 <UploadedPreview v-model:files="uploadedFiles" />
             </div>
         </div>
+        <SNSList :posts="list" @delete="handleDelete" />
     </div>
 
-    <SNSList />
+   
 
     <!-- Upload Dialog -->
     <NvaModal v-if="!isMobile" v-model="showUploadDialog" :title="uploadDialogTitle">
@@ -66,6 +90,14 @@ import NvaDrawer from '@/components/drawer/DrawerPanel.vue'
 import UploadContent from './components/UploadContent.vue'
 import UploadedPreview from './components/UploadedPreview.vue'
 import SNSList from './components/SNSList.vue'
+// api
+import { getSnsList, publishSns, deleteSns } from '@/api/sns'
+import useList from '@/hooks/useList'
+
+const {
+    list,
+    loading,
+    refresh } = useList(getSnsList)
 
 const isLoading = ref(false)
 const showTagList = ref(false)
@@ -106,13 +138,33 @@ const handleUploadComplete = (list, type) => {
     showUploadDialog.value = false
 }
 
-const handleInput = (event) => {
-    const content = event.target.innerText
-    const lastChar = content.slice(-1)
-    if (lastChar === '#') {
-        fetchTags()
-    } else {
-        showTagList.value = false
+const isPosting = ref(false)
+
+const handlePost = async () => {
+    if (isPosting.value) return
+
+    isPosting.value = true
+    const postData = tagInputRef.value.exportData()
+    console.log('handlePost', postData)
+
+    try {
+        await publishSns({
+            content: postData.text,
+            images: uploadedFiles.value.filter(file => file.type === 'image').map(file => file.url),
+            videos: uploadedFiles.value.filter(file => file.type === 'video').map(file => file.url),
+            tags: postData.tags,
+        })
+        await refresh()
+
+        // Clear all inputs after posting
+        postValue.value = ''
+        uploadedFiles.value = []
+        tagInputRef.value.clear() // Assuming TagInput component has a clear method
+    } catch (error) {
+        console.error('Error posting:', error)
+        // Handle error (e.g., show error message to user)
+    } finally {
+        isPosting.value = false
     }
 }
 
@@ -125,6 +177,15 @@ const fetchTags = () => {
         isLoading.value = false
         showTagList.value = true
     }, 1000)
+}
+
+
+const handleDelete = async (postId) => {
+    console.log('handleDelete', postId)
+    // 本地删除
+    list.value = list.value.filter(post => post.id !== postId)
+    await deleteSns({ id: postId })
+    await refresh()
 }
 
 const selectTag = (tag) => {
