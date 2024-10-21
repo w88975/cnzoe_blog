@@ -23,7 +23,7 @@ import '@kangc/v-md-editor/lib/theme/style/vuepress.css';
 import VConsole from 'vconsole';
 console.log(import.meta.env.MODE)
 if (localStorage.getItem('debug') == '1') {
-    new VConsole();
+    window.vConsole = new VConsole();
 }
 
 import Prism from 'prismjs';

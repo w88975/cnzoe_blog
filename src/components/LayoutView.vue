@@ -85,8 +85,14 @@ const toggleDrawer = () => {
 }
 
 const toggleDebug = () => {
-  localStorage.setItem('debug', '1')
-  new VConsole()
+
+  if (!window.vConsole) {
+    localStorage.setItem('debug', '1')
+    window.vConsole = new VConsole()
+  } else {
+    localStorage.removeItem('debug')
+    window.vConsole.destroy()
+  }
 }
 </script>
 

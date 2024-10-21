@@ -18,17 +18,18 @@
                     <div v-if="post.medias.length > 0" class="grid grid-cols-3 gap-2 mb-4">
                         <template v-for="(media, index) in post.medias.slice(0, 9)" :key="index">
                             <div v-if="index < 8 || post.medias.length <= 9" class="aspect-w-1 aspect-h-1">
-                                <img v-if="media.type === 'image'" :src="getImageResize(media.url)" :alt="`Post image ${index + 1}`"
-                                    class="w-full h-full object-cover rounded">
-                                <video v-else-if="media.type === 'video'" :src="media.url" class="w-full h-full object-cover rounded"
-                                    controls></video>
+                                <img v-if="media.type === 'image'" :src="getImageResize(media.url)"
+                                    :alt="`Post image ${index + 1}`" class="w-full h-full object-cover rounded">
+                                <video v-else-if="media.type === 'video'" :src="media.url"
+                                    class="w-full h-full object-cover rounded" controls></video>
                             </div>
                             <div v-else class="aspect-w-1 aspect-h-1 relative">
-                                <img v-if="media.type === 'image'" :src="getImageResize(media.url)" :alt="`Post image ${index + 1}`"
-                                    class="w-full h-full object-cover rounded">
-                                <video v-else-if="media.type === 'video'" :src="media.url" class="w-full h-full object-cover rounded"
-                                    ></video>
-                                <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded">
+                                <img v-if="media.type === 'image'" :src="getImageResize(media.url)"
+                                    :alt="`Post image ${index + 1}`" class="w-full h-full object-cover rounded">
+                                <video v-else-if="media.type === 'video'" :src="media.url"
+                                    class="w-full h-full object-cover rounded"></video>
+                                <div
+                                    class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded">
                                     <span class="text-white text-xl font-bold">+{{ post.medias.length - 8 }}</span>
                                 </div>
                             </div>
@@ -37,7 +38,7 @@
                     <!-- video -->
 
                     <div class="flex items-center justify-between text-sm text-gray-500">
-                        <span>{{ new Date(post.create_at).toLocaleString() }}</span>
+                        <span>{{ formatRelativeTime(post.create_at) }}</span>
                         <div class="flex items-center space-x-2" v-if="post.tags">
                             <span v-for="tag in post.tags.split(',')" :key="tag">#{{ tag }}</span>
                         </div>
@@ -90,6 +91,9 @@
 <script setup lang="js">
 import { watch, computed } from 'vue'
 import { OSS_URL, OSS_IMAGE_RESIZE } from '@/config'
+import { formatRelativeTime } from '@/utils/time'
+
+console.log(formatRelativeTime('2024-10-21 02:49:59'))
 
 const props = defineProps({
     posts: {
