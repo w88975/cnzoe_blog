@@ -3,7 +3,7 @@
     <!-- header -->
     <div class="flex justify-between items-center p-4" :class="{ 'pt-10': isPWA }">
       <RouterLink to="/">
-        <div class="flex items-center cursor-pointer active:opacity-50">
+        <div class="flex items-center cursor-pointer active:opacity-50" v-longpress="toggleDebug">
           <IconLogo class="w-8 h-8" />
           <span class="text-2xl font-bold ml-2">KamiSama</span>
         </div>
@@ -49,6 +49,8 @@ import IconLogo from '@/components/icons/iconLogo.vue'
 import IconMenu from '@/components/icons/iconMenu.vue'
 import DrawerPanel from '@/components/drawer/DrawerPanel.vue'
 import FooterView from '@/components/FooterView.vue'
+import VConsole from 'vconsole';
+
 
 import { $User } from '@/store/user'
 
@@ -80,6 +82,11 @@ const menuList = ref([
 ])
 const toggleDrawer = () => {
   drawerVisible.value = !drawerVisible.value
+}
+
+const toggleDebug = () => {
+  localStorage.setItem('debug', '1')
+  new VConsole()
 }
 </script>
 

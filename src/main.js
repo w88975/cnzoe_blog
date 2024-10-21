@@ -6,6 +6,9 @@ import App from './App.vue'
 import router from './router'
 import './index.css'
 
+// custom directive
+import LongPress from '@/directive/longpress'
+
 // arco
 import ArcoVue from '@arco-design/web-vue';
 import '@arco-design/web-vue/dist/arco.css';
@@ -15,6 +18,13 @@ import VueMarkdownEditor from '@kangc/v-md-editor';
 import '@kangc/v-md-editor/lib/style/base-editor.css';
 import vuepressTheme from '@kangc/v-md-editor/lib/theme/vuepress.js';
 import '@kangc/v-md-editor/lib/theme/style/vuepress.css';
+
+// vconsole
+import VConsole from 'vconsole';
+console.log(import.meta.env.MODE)
+if (localStorage.getItem('debug') == '1') {
+    new VConsole();
+}
 
 import Prism from 'prismjs';
 
@@ -40,6 +50,7 @@ app.config.globalProperties.$bus = bus
 window.NvaMessage = NvaMessage
 
 app.use(router)
+app.directive('longpress', LongPress)
 app.use(ArcoVue);
 app.use(VueMarkdownEditor)
 
