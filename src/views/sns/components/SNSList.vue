@@ -15,25 +15,78 @@
                     <p class="text-gray-800 text-base mb-4 whitespace-pre-line leading-relaxed font-sans">
                         {{ post.text }}
                     </p>
-                    <div v-if="post.medias.length > 0" class="grid grid-cols-3 gap-2 mb-4">
-                        <template v-for="(media, index) in post.medias.slice(0, 9)" :key="index">
-                            <div v-if="index < 8 || post.medias.length <= 9" class="aspect-w-1 aspect-h-1">
-                                <img v-if="media.type === 'image'" :src="getImageResize(media.url)"
-                                    :alt="`Post image ${index + 1}`" class="w-full h-full object-cover rounded">
-                                <video v-else-if="media.type === 'video'" :src="media.url"
-                                    class="w-full h-full object-cover rounded" controls></video>
-                            </div>
-                            <div v-else class="aspect-w-1 aspect-h-1 relative">
-                                <img v-if="media.type === 'image'" :src="getImageResize(media.url)"
-                                    :alt="`Post image ${index + 1}`" class="w-full h-full object-cover rounded">
-                                <video v-else-if="media.type === 'video'" :src="media.url"
-                                    class="w-full h-full object-cover rounded"></video>
+                    <div v-if="post.medias.length > 0" class="mb-4">
+                        <div v-if="post.medias.length === 1 && post.medias[0].type === 'video'"
+                            class="w-full h-48 lg:h-96 bg-black overflow-hidden">
+                            <div class="relative w-full h-full bg-black">
+                                <!-- Fake video thumbnail -->
+                                <img :src="getImageResize(post.medias[0].url)" alt="Video thumbnail"
+                                    class="w-full h-full object-cover">
+
+                                <!-- Play button overlay -->
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <div
+                                        class="w-16 h-16 bg-white bg-opacity-75 rounded-full flex items-center justify-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-black"
+                                            viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                </div>
+
+                                <!-- Fake video controls -->
                                 <div
-                                    class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded">
-                                    <span class="text-white text-xl font-bold">+{{ post.medias.length - 8 }}</span>
+                                    class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
+                                    <div class="flex items-center justify-between text-white">
+                                        <div class="flex items-center space-x-2">
+                                            <button class="focus:outline-none">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                            </button>
+                                            <span>0:00 / --:--</span>
+                                        </div>
+                                        <button class="focus:outline-none">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <div class="mt-2 bg-gray-200 rounded-full h-1">
+                                        <div class="bg-red-500 h-1 rounded-full w-1/3"></div>
+                                    </div>
                                 </div>
                             </div>
-                        </template>
+                        </div>
+                        <div v-else class="grid grid-cols-3 gap-2">
+                            <template v-for="(media, index) in post.medias.slice(0, 9)" :key="index">
+                                <div v-if="index < 8 || post.medias.length <= 9" class="aspect-w-1 aspect-h-1">
+                                    <img v-if="media.type === 'image'" :src="getImageResize(media.url)"
+                                        :alt="`Post image ${index + 1}`" class="w-full h-full object-cover rounded">
+                                    <video v-else-if="media.type === 'video'" :src="media.url"
+                                        class="w-full h-full object-cover rounded" controls></video>
+                                </div>
+                                <div v-else class="aspect-w-1 aspect-h-1 relative">
+                                    <img v-if="media.type === 'image'" :src="getImageResize(media.url)"
+                                        :alt="`Post image ${index + 1}`" class="w-full h-full object-cover rounded">
+                                    <video v-else-if="media.type === 'video'" :src="media.url"
+                                        class="w-full h-full object-cover rounded"></video>
+                                    <div
+                                        class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded">
+                                        <span class="text-white text-xl font-bold">+{{ post.medias.length - 8 }}</span>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
                     </div>
                     <!-- video -->
 
