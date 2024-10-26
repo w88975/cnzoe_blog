@@ -3,8 +3,14 @@
         <TitleLine :title="postInfo.title || '加载中...'">
             <template #right>
                 <a-space>
+                    <NvaButton type="primary" @click="toggleViewMode" :class="{ 'bg-red-500': isGridView }">
+                        {{ isGridView ? '切换到列表模式' : '切换到看图模式' }}
+                    </NvaButton>
                     <NvaButton type="primary" @click="toggleFavorite" :class="{ 'bg-red-500': isLiked }">
                         {{ isLiked ? '已收藏' : '收藏' }}
+                    </NvaButton>
+                    <NvaButton type="primary" @click="toggleLike" :class="{ 'bg-red-500': isJiping }">
+                        {{ isJiping ? '已喜欢' : '喜欢' }}
                     </NvaButton>
                     <NvaButton type="primary" @click="saveDocument"
                         :disabled="isSaving === 'saving' || isSaving === 'saved'">
@@ -13,30 +19,35 @@
                 </a-space>
             </template>
         </TitleLine>
-        <div class="mb-4 text-sm text-gray-600">
-            <p class="mb-1">
-                <span class="font-semibold">作者：</span>
-                <span @click="viewAuthor(postInfo.authorName)"
-                    class="text-blue-600 cursor-pointer hover:underline">{{ postInfo.authorName }}</span>
-            </p>
-            <p class="mb-1">
-                <span class="font-semibold">发帖时间：</span>
-                <span class="text-green-600">{{ postInfo.postTime }}</span>
-            </p>
-            <p>
-                <span class="font-semibold">图片数量：</span>
-                <span class="text-red-600">{{ postInfo.images.length }}</span>
-            </p>
+        <div v-if="isGridView" class="grid grid-cols-2 gap-4">
+            <img v-for="(image, index) in postInfo.images" :key="index" :src="image" class="w-full h-auto" />
         </div>
-        <div class="article-content" ref="articleContent">
-            <div v-show="postInfo.content" v-html="postInfo.content"></div>
-            <p v-show="!postInfo.content">加载中...</p>
+        <div v-else>
+            <div class="mb-4 text-sm text-gray-600">
+                <p class="mb-1">
+                    <span class="font-semibold">作者：</span>
+                    <span @click="viewAuthor(postInfo.authorName)"
+                        class="text-blue-600 cursor-pointer hover:underline">{{ postInfo.authorName }}</span>
+                </p>
+                <p class="mb-1">
+                    <span class="font-semibold">发帖时间：</span>
+                    <span class="text-green-600">{{ postInfo.postTime }}</span>
+                </p>
+                <p>
+                    <span class="font-semibold">图片数量：</span>
+                    <span class="text-red-600">{{ postInfo.images.length }}</span>
+                </p>
+            </div>
+            <div class="article-content" ref="articleContent">
+                <div v-show="postInfo.content" v-html="postInfo.content"></div>
+                <p v-show="!postInfo.content">加载中...</p>
+            </div>
         </div>
     </BoxView>
 </template>
 
 <script setup>
-import { $$91porn_PostContent, $$91porn_UpdateSavedImgs, $$91porn_ToggleFavorite } from '@/api/91porn'
+import { $$91porn_PostContent, $$91porn_UpdateSavedImgs, $$91porn_ToggleFavorite, $$91porn_ToggleJiping } from '@/api/91porn'
 import { uploadFileToR2 } from '@/utils/aws-r2'
 import { saveUploadData } from '@/api/files'
 import BoxView from '@/components/BoxView.vue'
@@ -59,10 +70,12 @@ const postInfo = ref({
     // 新图片
     saved_imgs: '', // "https://oss.cnzoe.com/porn91/24101022113dba1cddacc8c25a.jpg,https://oss.cnzoe.com/porn91/2410102211706a8e0f532993e1.jpg,https://oss.cnzoe.com/porn91/241010221133fd1a32e44fe950.jpg,https://oss.cnzoe.com/porn91/2410102211274eaf7dfdec9e0d.jpg,https://oss.cnzoe.com/porn91/241010221103287c76b0c5126e.jpg,https://oss.cnzoe.com/porn91/24101022119f28e56db23d3aca.jpg,https://oss.cnzoe.com/porn91/241010221163951b8c9e2e23c0.jpg"
     is_like: false, // Add this line to include the is_like property
+    is_jiping: false, // 新增属性来控制喜欢状态
 })
 
 const isSaving = ref('initial') // 'initial', 'saving', 'saved'
 const isLiked = ref(false)
+const isJiping = ref(false) // 新增状态来控制喜欢状态
 const saveProgress = ref(0)
 const totalImages = computed(() => postInfo.value.images?.length || 0)
 
@@ -77,17 +90,30 @@ const toggleFavorite = async () => {
     isLiked.value = res.data.data.isLiked
 }
 
+const toggleLike = async () => {
+    const res = await $$91porn_ToggleJiping(tid.value) // Assuming the API can handle this
+    isJiping.value = res.data.data.is_jiping // Update the isJiping state based on the response
+}
+
+const isGridView = ref(true) // 新增状态来控制视图模式
+
+const toggleViewMode = () => {
+    isGridView.value = !isGridView.value // 切换视图模式
+}
+
 onMounted(async () => {
     tid.value = route.query.tid
     const res = await $$91porn_PostContent(tid.value)
     postInfo.value = res.data
     isLiked.value = postInfo.value.is_like === 1
+    isJiping.value = postInfo.value.is_jiping === 1 // Initialize isJiping based on the postInfo
     // Replace old image URLs with new ones in the content
     if (postInfo.value.images && postInfo.value.images.length > 0 && postInfo.value.saved_imgs) {
         const oldImages = postInfo.value.images
         const newImages = postInfo.value.saved_imgs.split(',')
 
         if (oldImages.length === newImages.length) {
+            postInfo.value.images = newImages
             for (let i = 0; i < oldImages.length; i++) {
                 const oldImageUrl = oldImages[i]
                 const newImageUrl = newImages[i]
@@ -179,7 +205,7 @@ const saveDocument = async () => {
             saveProgress.value = 0
         }
     } else {
-        alert('没有图片需要保存')
+        alert('没有片需要保存')
     }
 }
 

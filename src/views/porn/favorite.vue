@@ -65,7 +65,7 @@ import { useRoute } from 'vue-router'
 const route = useRoute()
 const author = ref(route.query.author)
 const tabIndex = ref(author.value ? 4 : 0)
-const tabList = ref(['已收藏', '已保存', '已缓存', '作者', '查询结果'])
+const tabList = ref(['已收藏', '已保存', '已缓存', '作者', '查询结果', '极品'])
 
 const ListHandle = useDBSearch({
     tableName: 'PORN91',
@@ -74,7 +74,8 @@ const ListHandle = useDBSearch({
         xx: {}
     } : {
         is_like: 1
-    }
+    },
+    order: 'desc'
 })
 
 const { list, loading, refresh } = ListHandle
@@ -113,6 +114,9 @@ watch(tabIndex, (newVal) => {
                     author_name: author.value
                 }
             }
+            break
+        case 5:
+            params = { search: { is_jiping: 1 } }
             break
         case 3:
             params = {

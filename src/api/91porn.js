@@ -26,6 +26,11 @@ export const $$91porn_ToggleFavorite = async (tid) => {
     return instance.post('/api/91porn/toggle-favorite', { tid })
 }
 
+// /api/91porn/toggle-jiping
+export const $$91porn_ToggleJiping = async (tid) => {
+    return instance.post('/api/91porn/toggle-jiping', { tid })
+}
+
 // /api/91porn/insert-sexyjpg
 export const $$91porn_InsertSexyjpg = async (tid, sql) => {
     return instance.post('/api/91porn/insert-sexyjpg', { tid, sql })
