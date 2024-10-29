@@ -34,7 +34,7 @@ async function createVideoPreviews(videoInput, onProgress) {
       video.onerror = reject
       // 打印错误
       video.onerror = (e) => {
-        onProgress?.(`视频加载失败1:`)
+        onProgress?.(`视频加载失败:`)
         console.log(e)
         reject(e)
       }
