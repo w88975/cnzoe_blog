@@ -67,10 +67,24 @@ const router = createRouter({
             ]
         },
         {
+            path: '/app',
+            name: 'app',
+            component: LayoutView,
+            children: [
+                {
+                    path: 'lottie',
+                    name: 'lottie',
+                    meta: {
+                        requiresAuth: false
+                    },
+                    component: () => import('../views/lottie/compress.vue')
+                }
+            ]
+        },
+        {
             path: '/admin',
             name: 'admin',
             component: LayoutView,
-
             children: [
                 {
                     path: '',

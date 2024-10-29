@@ -4,7 +4,7 @@
 import GIF from 'gif.js'
 // const baseURL = 'https://unpkg.com/@ffmpeg/core-mt@0.12.6/dist/esm'
 
-async function createVideoPreviews(videoInput) {
+async function createVideoPreviews(videoInput, onProgress) {
   try {
     let videoUrl
 
@@ -16,26 +16,39 @@ async function createVideoPreviews(videoInput) {
       throw new Error('Invalid input: expected File object or URL string')
     }
 
+    onProgress?.('开始加载视频...')
+
     // 创建video元素
     const video = document.createElement('video')
     video.src = videoUrl
     video.crossOrigin = 'anonymous' // 如果视频来自不同域
     video.muted = true // 静音视频以避免自动播放限制
     video.playsInline = true // 内联播放，避免全屏
+    video.autoplay = true
+    video.style.objectFit = 'cover'
+    video.style.backgroundColor = '#ccc';
 
     // 等待视频加载元数据
     await new Promise((resolve, reject) => {
       video.onloadedmetadata = resolve
       video.onerror = reject
+      // 打印错误
+      video.onerror = (e) => {
+        onProgress?.(`视频加载失败1:`)
+        console.log(e)
+        reject(e)
+      }
     })
+
+    onProgress?.('视频加载完成，开始截取帧...')
 
     // 创建canvas元素
     const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d')
 
     // 设置canvas大小
-    canvas.width = 150
-    canvas.height = 150
+    canvas.width = 350
+    canvas.height = 350
 
     // 定义截图的时间点（10%, 30%, 50%, 70%）
     const percentages = [0.1, 0.3, 0.5, 0.7]
@@ -60,34 +73,37 @@ async function createVideoPreviews(videoInput) {
       })
 
       // 在canvas上绘制黑色背景
-      ctx.fillStyle = 'black'
-      ctx.fillRect(0, 0, 150, 150)
+      // ctx.fillStyle = 'black'
+      ctx.fillRect(0, 0, 350, 350)
 
       // 计算缩放和位置以保持宽高比
-      const scale = Math.min(150 / video.videoWidth, 150 / video.videoHeight)
-      const x = (150 - video.videoWidth * scale) / 2
-      const y = (150 - video.videoHeight * scale) / 2
+      const scale = Math.min(350 / video.videoWidth, 350 / video.videoHeight)
+      const x = (350 - video.videoWidth * scale) / 2
+      const y = (350 - video.videoHeight * scale) / 2
 
       // 在canvas上绘制缩放后的视频帧
       ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight, x, y, video.videoWidth * scale, video.videoHeight * scale)
 
       // 将canvas内容添加到frames数组
-      frames.push(ctx.getImageData(0, 0, 150, 150))
+      frames.push(ctx.getImageData(0, 0, 350, 350))
 
-      console.log(`截取预览图 ${percentage * 100}% 完成`)
+      onProgress?.(`截取预览图 ${Math.round(percentage * 100)}% 完成`)
     }
+
+    onProgress?.('开始生成GIF...')
 
     // 创建GIF
     const gif = new GIF({
       workers: 2,
       quality: 10,
-      width: 150,
-      height: 150
+      width: 350,
+      height: 350
     })
 
     // 添加帧到GIF
-    frames.forEach(frame => {
-      gif.addFrame(frame, {delay: 500}) // 每帧显示500毫秒
+    frames.forEach((frame, index) => {
+      gif.addFrame(frame, { delay: 500 }) // 每帧显示500毫秒
+      onProgress?.(`添加第 ${index + 1} 帧到GIF`)
     })
 
     // 渲染GIF
@@ -102,10 +118,11 @@ async function createVideoPreviews(videoInput) {
       URL.revokeObjectURL(videoUrl)
     }
 
-    console.log('GIF预览图生成完成')
+    onProgress?.('GIF预览图生成完成')
     return gifBlob
   } catch (error) {
-    console.error('创建视频预览失败:', error)
+    onProgress?.(`创建视频预览失败: ${error.message}`)
+    console.error(error)
     return null
   }
 }
@@ -148,7 +165,7 @@ async function createVideoPreviews(videoInput) {
 //   // 截取视频的 4 帧
 //   for (let i = 0; i < 4; i++) {
 //     const time = (i * 0.75).toFixed(2) // 0%, 25%, 50%, 75% of video duration
-//     await ffmpeg.exec(['-i', 'input.mp4', '-ss', `${time}`, '-vframes', '1', `frame${i}.png`, '-vf', 'scale=-1:150'])
+//     await ffmpeg.exec(['-i', 'input.mp4', '-ss', `${time}`, '-vframes', '1', `frame${i}.png`, '-vf', 'scale=-1:350'])
 //     console.log(`截取帧 ${i + 1}/4 完成 (${i * 25}% 进度)`)
 //   }
 
@@ -175,7 +192,7 @@ async function createVideoPreviews(videoInput) {
 //     const img = document.createElement('img')
 //     img.src = blobUrl
 //     img.style.width = 'auto' // 宽度自适应
-//     img.style.height = '150px' // 设置高度为150像素
+//     img.style.height = '350px' // 设置高度为350像素
 //     document.body.appendChild(img)
 //     console.log(`Frame ${i + 1} Blob URL: ${blobUrl}`)
 //   }
